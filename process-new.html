@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>CACOS • Novo Processo</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<header class="header">
+  <div class="header-inner">
+    <div class="brand">
+      <img src="logo-cacos.jpg" alt="CACOS" style="height:28px" />
+      <span class="brand-name">CACOS</span>
+    </div>
+    <nav class="topnav">
+      <a class="active" href="process-new.html">Novo Processo</a>
+      <a href="validate-internal.html">Validação</a>
+      <a href="validate-bank.html">Banco</a>
+      <a href="index.html">Dashboard</a>
+    </nav>
+  </div>
+</header>
+
+<main class="main">
+  <div class="container grid grid-2">
+
+    <!-- ================= FORM PRINCIPAL ================= -->
+    <form class="card" id="formNovoProcesso" autocomplete="off">
+      <h2 class="card-title">Criar Processo • Dados do Cliente</h2>
+
+      <!-- Identificação -->
+      <div class="card" style="margin-bottom:12px">
+        <div class="card-title" style="margin-bottom:6px">Identificação</div>
+        <div class="grid grid-2" style="gap:12px">
+          <input class="input" name="nome" placeholder="Nome completo*" required />
+          <input class="input" name="telefone" placeholder="Telefone 1" required />
+          <input class="input" name="telefone" placeholder="Telefone 2" required />
+          <input class="input" type="email" name="email" placeholder="Email" />
+          <select class="select" name="estadoCivil">
+            <option value="">Estado civil</option>
+            <option>Solteiro(a)</option><option>Casado(a)</option><option>União de facto</option><option>Divorciado(a)</option>
+          </select>
+
+          <select class="select" name="docTipo">
+            <option value="">Tipo de documento</option>
+            <option>BI</option><option>Passaporte</option><option>DIRE</option>
+          </select>
+          <input class="input" name="docNumero" placeholder="Nº documento*" required />
+    <!-- Label fora do campo de validade -->
+    <label class="field">
+      <span class="label">Validade do documento*</span>
+      <input class="input" type="date" name="docValidade" required />
+    </label>
+
+    <!-- Label fora do campo de nascimento -->
+    <label class="field">
+      <span class="label">Data de nascimento*</span>
+      <input class="input" type="date" name="nascimento" required />
+    </label>
+          <select class="select" name="genero">
+            <option value="">Género</option><option>Feminino</option><option>Masculino</option><option>Outro</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Endereço -->
+      <div class="card" style="margin-bottom:12px">
+        <div class="card-title" style="margin-bottom:6px">Endereço</div>
+        <div class="grid grid-2" style="gap:12px">
+          <input class="input" name="morada" placeholder="Residencia (Bairro, Rua, Nº)*" required />
+          <input class="input" name="bairro" placeholder="Bairro" />
+          <input class="input" name="cidade" placeholder="Cidade*" required />
+          <input class="input" name="provincia" placeholder="Província*" required />
+          <input class="input" name="postal" placeholder="Código postal" />
+        </div>
+      </div>
+
+      <!-- Emprego & Rendimento -->
+      <div class="card" style="margin-bottom:12px">
+        <div class="card-title" style="margin-bottom:6px">Emprego & Rendimento</div>
+        <div class="grid grid-2" style="gap:12px">
+          <input class="input" name="empregador" placeholder="Empregador / Actividade*" required />
+                    <input class="input" name="empregador" placeholder="Organica*" required />
+          <input class="input" name="funcao" placeholder="Função" />
+                    <input class="input" name="funcao" placeholder="Endereço" />
+                    <input class="input" name="empregador" placeholder="Nuit*" required />
+          <input class="input" type="number" min="0" step="0.01" name="rendimento" placeholder="Rendimento mensal (MZN)*" required />
+          <input class="input" type="number" min="0" step="0.01" name="despesas" placeholder="Despesas mensais (MZN)" />
+          <select class="select" name="tipoContrato">
+            <option value="">Tipo de vínculo</option><option>Efectivo</option><option>Prazo Fixo</option><option>Conta Própria</option>
+          </select>
+          <input class="input" type="number" min="0" name="antiguidade" placeholder="Antiguidade (meses)" />
+                    <input class="input" type="input" min="0" name="antiguidade" placeholder="Supervisor 1" />
+                              <input class="input" min="0" name="antiguidade" placeholder="Contacto 1" />
+                                        <input class="input"  min="0" name="antiguidade" placeholder="Supervisor 2" />
+                                                  <input class="input" type="number" min="0" name="antiguidade" placeholder="Contacto 2" />
+
+        </div>
+      </div>
+
+      <!-- Referências -->
+      <div class="card" style="margin-bottom:12px">
+        <div class="card-title" style="margin-bottom:6px">Referências</div>
+        <div class="grid grid-2" style="gap:12px">
+          <input class="input" name="ref1" placeholder="Referência 1 – Nome" />
+          <input class="input" name="ref1tel" placeholder="Referência 1 – Telefone" />
+          <input class="input" name="ref2" placeholder="Referência 2 – Nome" />
+          <input class="input" name="ref2tel" placeholder="Referência 2 – Telefone" />
+        </div>
+      </div>
+
+      <!-- Banco & Ca -->
+      <div class="card" style="margin-bottom:12px">
+        <div class="card-title" style="margin-bottom:6px">Banco & Carteira móvel</div>
+        <div class="grid grid-2" style="gap:12px">
+          <select class="select" name="tipoContrato">
+            <option value="">Banco</option><option>MBIM</option><option>BCI</option><option>FCB</option>
+          </select>  
+          <input class="input" name="iban" placeholder="Titular da conta" />
+          <input class="input" name="iban" placeholder="NIB" />
+          <input class="input" name="iban" placeholder="NUIB" />
+          <input class="input" name="mpesa" placeholder="Carteira móvel" />
+        </div>
+      </div>
+
+      <!-- Anexos -->
+      <div class="card" style="margin-bottom:12px">
+        <div class="card-title" style="margin-bottom:6px">Anexos (Fotos para KYC)</div>
+        <div class="row" style="gap:10px">
+          <div class="inline"><input class="input" type="file" accept="image/*" /> <span class="hint">BI/Pass (frente)</span></div>
+          <div class="inline"><input class="input" type="file" accept="image/*" /> <span class="hint">BI/Pass (verso)</span></div>
+          <div class="inline"><input class="input" type="file" accept="image/*,application/pdf" /> <span class="hint">Comprovativo de residência</span></div>
+          <div class="inline"><input class="input" type="file" accept="image/*,application/pdf" /> <span class="hint">Rendimentos (3 meses)</span></div>
+        </div>
+      </div>
+
+            <!-- Dados do consultor (quem capturou o processo) -->
+      <div class="card" style="margin-bottom:12px" >
+        <div class="card-title" style="margin-bottom:6px">Consultor (captura do processo)</div>
+        <div class="grid grid-2" style="gap:10px">
+          <input class="input" placeholder="Nome do consultor*" required />
+          <input class="input" placeholder="Contacto do consultor (ex: +258 …)*" required />
+        </div>
+        <div class="grid grid-2" style="gap:10px;margin-top:8px">
+          <select class="select" name="tipoContrato">
+            <option value="">Banco</option><option>MBIM</option><option>BCI</option><option>FCB</option>
+          </select>  
+          <input class="input" placeholder="NIB" />
+          <input class="input" placeholder="Carteira móvel (ex: M-Pesa, e-Mola)" style="grid-column:1/-1" />
+        </div>
+        <div class="hint" style="margin-top:6px">Pelo menos um meio de pagamento deve ser indicado (NIB/IBAN ou carteira móvel).</div>
+      </div>
+
+      <!-- Proposta & Cálculo -->
+      <div class="card" style="margin-bottom:12px">
+        <div class="card-title" style="margin-bottom:6px">Proposta de Crédito</div>
+        <div class="grid grid-2" style="gap:12px">
+          <input class="input" id="montante" type="number" min="0" step="0.01" placeholder="Montante (MZN)*" required />
+          <select class="select" id="prazo">
+            <option value="">Prazo (meses)*</option><option>6</option><option>9</option><option selected>12</option><option>18</option><option>24</option>
+          </select>
+          <input class="input" id="taxa" type="number" min="0" step="0.01" placeholder="Taxa anual (%)*" value="24" required />
+          <input class="input" id="seguro" type="number" min="0" step="0.01" placeholder="Seguro mensal (% do principal)" />
+          <input class="input" id="servico" type="number" min="0" step="0.01" placeholder="Taxa de serviço mensal (%)" />
+          <input class="input" id="entrada" type="number" min="0" step="0.01" placeholder="Entrada (MZN) opcional" />
+        </div>
+
+        <div class="card" style="margin-top:10px">
+          <div class="card-title" style="margin-bottom:6px">Prestação estimada</div>
+          <div class="grid grid-3" style="gap:12px">
+            <div class="kpi"><div class="title">Prestação (PMT)</div><div class="value" id="prestacao">—</div><div class="sub" id="breakdown">Inclui seguro/serviço se preenchidos</div></div>
+            <div class="kpi"><div class="title">Total a pagar</div><div class="value" id="total">—</div><div class="sub" id="juros">Juros aproximados</div></div>
+            <div class="kpi"><div class="title">CET aprox.</div><div class="value" id="cet">—</div><div class="sub">Taxa efetiva mensal→anual</div></div>
+          </div>
+        </div>
+
+        <!-- Elegibilidade -->
+        <div class="card" style="margin-top:10px">
+          <div class="card-title" style="margin-bottom:6px">Elegibilidade (pré-análise)</div>
+          <div class="grid grid-3" style="gap:12px">
+            <div class="kpi"><div class="title">Rendimento mensal</div><div class="value" id="rendMensal">—</div></div>
+            <div class="kpi"><div class="title">Despesas mensais</div><div class="value" id="despMensal">—</div></div>
+            <div class="kpi"><div class="title">Rendimento líquido</div><div class="value" id="rendLiquido">—</div></div>
+          </div>
+          <div class="grid grid-3" style="gap:12px;margin-top:8px">
+            <div class="kpi"><div class="title">Prestação estimada</div><div class="value" id="prestacaoView">—</div></div>
+            <div class="kpi"><div class="title">Prestação máxima (35%)</div><div class="value" id="prestMax">—</div></div>
+            <div class="kpi"><div class="title">Rácio Dívida/Rendimento</div><div class="value" id="dti">—</div></div>
+          </div>
+          <div style="margin-top:8px">
+            <span class="badge" id="decisaoBadge">Sem dados</span>
+            <div class="hint">Regra base: prestação ≤ 35% do rendimento líquido.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Consentimento -->
+      <label class="inline" style="align-items:flex-start;margin:6px 0">
+        <input type="checkbox" required style="margin-top:5px" />
+        <span class="hint">Confirmo veracidade dos dados e autorizo o tratamento para análise de crédito.</span>
+      </label>
+
+      <div class="inline" style="margin-top:8px">
+        <button class="btn-primary" type="submit">Guardar e Enviar para Validação</button>
+        <button type="reset" class="btn-ghost" id="limpar">Limpar</button>
+      </div>
+
+      <div class="hint" style="margin-top:6px">
+        Estado atual do processo: <span class="badge info">CRIADO</span> → ao submeter, vai para <span class="badge info">EM VALIDAÇÃO (KYC)</span>.
+      </div>
+    </form>
+
+    <!-- ================= LISTA À DIREITA ================= -->
+    <div class="card">
+      <h2 class="card-title">Processos recentes</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>ID</th><th>Cliente</th><th>Estado</th><th>Última acção</th></tr></thead>
+          <tbody id="recentBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<nav class="footer-nav">
+  <a class="active" href="./process-new.html">Novo</a>
+  <a href="./validate-internal.html">Validação</a>
+  <a href="./validate-bank.html">Banco</a>
+  <a href="./dashboard.html">Dash</a>
+</nav>
+
+<script>
+  // ===== Helpers & Storage =====
+  const MZN = v => v.toLocaleString("pt-MZ",{style:"currency",currency:"MZN",maximumFractionDigits:2});
+  const K = { clients:'cacos_clients', processes:'cacos_processes' };
+  const load = k => JSON.parse(localStorage.getItem(k) || '[]');
+  const save = (k,v) => localStorage.setItem(k, JSON.stringify(v));
+  const genId = (p) => { const d=new Date(); return `${p}-${d.getFullYear().toString().slice(-2)}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}-${d.getHours()}${d.getMinutes()}${d.getSeconds()}`; };
+
+  const AFFORD_RATIO = 0.35; // 35%
+
+  // ===== Prestação (PMT) =====
+  function calcPrestacao() {
+    const p0 = parseFloat(document.getElementById('montante').value || '0');
+    const entrada = parseFloat(document.getElementById('entrada').value || '0');
+    const principal = Math.max(p0 - entrada, 0);
+
+    const n = parseInt(document.getElementById('prazo').value || '0', 10);
+    const taxaAnual = parseFloat(document.getElementById('taxa').value || '0');
+    const i = (taxaAnual/100)/12;
+
+    const seguroPct = parseFloat(document.getElementById('seguro').value || '0')/100;
+    const servPct   = parseFloat(document.getElementById('servico').value || '0')/100;
+    const extrasMensais = principal * (seguroPct + servPct);
+
+    if (!principal || !n || !i) { setPrestacaoUI({prestacao:0,pmt:0,total:0,juros:0,cet:0}); return { pmt:0, prestacao:0, n, principal }; }
+
+    const pmt = principal * (i / (1 - Math.pow(1+i,-n)));
+    const prestacao = pmt + extrasMensais;
+    const totalPago = prestacao * n;
+    const jurosAprox = totalPago - principal;
+
+    // CET aprox (bissecção)
+    function irrMensal(p, a, prazo){ let L=0,H=1,M=0; for(let k=0;k<40;k++){ M=(L+H)/2; const vp=a*(1-Math.pow(1+M,-prazo))/M; (vp>p? L=M: H=M);} return (L+H)/2; }
+    const cetAnual = Math.pow(1+irrMensal(principal, prestacao, n),12)-1;
+
+    setPrestacaoUI({prestacao,pmt,total:totalPago,juros:jurosAprox,cet:cetAnual});
+    return { pmt, prestacao, n, principal };
+  }
+
+  function setPrestacaoUI({prestacao,pmt,total,juros,cet}){
+    const P = id => document.getElementById(id);
+    P('prestacao').textContent = prestacao ? MZN(prestacao) : '—';
+    P('breakdown').textContent = prestacao && pmt ? `PMT ${MZN(pmt)}${prestacao>pmt?` + extras ${MZN(prestacao-pmt)}`:''}` : 'Inclui seguro/serviço se preenchidos';
+    P('total').textContent = total ? MZN(total) : '—';
+    P('juros').textContent = juros ? `Juros aprox.: ${MZN(juros)}` : 'Juros aproximados';
+    P('cet').textContent = cet ? `${(cet*100).toFixed(2)}% a.a.` : '—';
+    P('prestacaoView').textContent = prestacao ? MZN(prestacao) : '—';
+  }
+
+  // ===== Elegibilidade =====
+  function calcElegibilidade(){
+    const renda = parseFloat(document.querySelector('[name="rendimento"]')?.value || '0');
+    const despesas = parseFloat(document.querySelector('[name="despesas"]')?.value || '0');
+    const liquido = Math.max(renda - despesas, 0);
+
+    const { prestacao } = calcPrestacao();
+    const prestMax = liquido * AFFORD_RATIO;
+    const dti = liquido>0 ? (prestacao/liquido) : 0;
+
+    const set = (id,val) => document.getElementById(id).textContent = val;
+    set('rendMensal', renda? MZN(renda) : '—');
+    set('despMensal', despesas? MZN(despesas) : '—');
+    set('rendLiquido', liquido? MZN(liquido) : '—');
+    set('prestMax', liquido? MZN(prestMax) : '—');
+    set('dti', (prestacao && liquido) ? `${(dti*100).toFixed(1)}%` : '—');
+
+    const badge = document.getElementById('decisaoBadge');
+    badge.className = 'badge';
+    if (!prestacao || !liquido){ badge.textContent = 'Sem dados'; return false; }
+    if (prestacao <= prestMax){ badge.classList.add('ok'); badge.textContent = 'Elegível (pré-análise)'; return true; }
+    badge.classList.add('err'); badge.textContent = 'Não elegível (prestação acima do limite)'; return false;
+  }
+
+  // Eventos em tempo real
+  ['montante','prazo','taxa','seguro','servico','entrada'].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.addEventListener('input', ()=>{ calcPrestacao(); calcElegibilidade(); });
+  });
+  ['rendimento','despesas'].forEach(name=>{
+    const el=document.querySelector(`[name="${name}"]`); if(el) el.addEventListener('input', ()=>{ calcElegibilidade(); });
+  });
+  document.getElementById('prazo').addEventListener('change', ()=>{ calcPrestacao(); calcElegibilidade(); });
+  document.getElementById('limpar').addEventListener('click', ()=> setTimeout(()=>{ calcPrestacao(); calcElegibilidade(); },0));
+  calcPrestacao(); calcElegibilidade();
+
+  // ===== Tabela de recentes (storage) =====
+  function renderRecentes(){
+    const tbody = document.getElementById('recentBody'); if(!tbody) return;
+    const procs = load(K.processes).slice(-12).reverse();
+    const clients = load(K.clients); const byId = Object.fromEntries(clients.map(c=>[c.id,c]));
+    tbody.innerHTML = procs.map(p=>{
+      const c = byId[p.clientId]; const nome = c? c.nome : '(desconhecido)';
+      const quando = new Date(p.updatedAt||p.createdAt).toLocaleString('pt-PT');
+      const cls = p.state.includes('NÃO ELEGÍVEL') ? 'badge err' :
+                  p.state.includes('VALIDAÇÃO') ? 'badge info' :
+                  p.state==='ATIVO' ? 'badge ok' : 'badge';
+      return `<tr><td>${p.id}</td><td>${nome}</td><td><span class="${cls}">${p.state}</span></td><td>${quando}</td></tr>`;
+    }).join('') || `<tr><td colspan="4" class="hint">Sem processos ainda.</td></tr>`;
+  }
+  renderRecentes();
+
+  // ===== Submissão: cria Cliente + Processo =====
+  document.getElementById('formNovoProcesso').addEventListener('submit',(e)=>{
+    e.preventDefault();
+
+    // dados cliente
+    const get = (n)=>document.querySelector(`[name="${n}"]`)?.value?.trim()||'';
+    const cliente = {
+      id: genId('CLI'),
+      nome: get('nome'), telefone: get('telefone'), email:get('email'), nif:get('nif'),
+      doc:{tipo:get('docTipo'),numero:get('docNumero'),validade:get('docValidade')},
+      nascimento:get('nascimento'), genero:get('genero'),
+      morada:{linha:get('morada'), bairro:get('bairro'), cidade:get('cidade'), provincia:get('provincia'), postal:get('postal')},
+      emprego:{empregador:get('empregador'), funcao:get('funcao'),
+               rendimento:Number(get('rendimento')||0), despesas:Number(get('despesas')||0),
+               tipoContrato:get('tipoContrato'), antiguidadeMeses:Number(get('antiguidade')||0)},
+      referencias:[{nome:get('ref1'),tel:get('ref1tel')},{nome:get('ref2'),tel:get('ref2tel')}],
+      pagamentos:{iban:get('iban'), mpesa:get('mpesa'), diaVenc:get('diaVenc'), grace:Number(get('grace')||0)},
+      createdAt: Date.now()
+    };
+
+    // proposta + prestação
+    const m = Number(document.getElementById('montante').value||0);
+    const n = Number(document.getElementById('prazo').value||0);
+    const t = Number(document.getElementById('taxa').value||0);
+    const { prestacao, principal } = calcPrestacao();
+    const elegivel = calcElegibilidade();
+
+    const clients = load(K.clients); clients.push(cliente); save(K.clients, clients);
+
+    const processo = {
+      id: genId('PRC'),
+      clientId: cliente.id,
+      proposta: { montante:m, prazoMeses:n, taxaAnual:t, prestacao:Number(prestacao||0), principal:Number(principal||0) },
+      state: elegivel ? 'EM VALIDAÇÃO (KYC)' : 'NÃO ELEGÍVEL (fora política)',
+      createdAt: Date.now(),
+      updatedAt: Date.now()
+    };
+    const procs = load(K.processes); procs.push(processo); save(K.processes, procs);
+
+    alert(`Cliente ${cliente.nome} criado.\nProcesso ${processo.id}: ${processo.state}.`);
+    e.target.reset();
+    setTimeout(()=>{ calcPrestacao(); calcElegibilidade(); renderRecentes(); },0);
+  });
+</script>
+</body>
+</html>

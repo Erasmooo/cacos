@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>CACOS • Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<header class="header">
+  <div class="header-inner">
+    <div class="brand"><img src="logo-cacos.jpg" style="height:28px" /><span class="brand-name">CACOS</span></div>
+    <nav class="topnav">
+      <a href="process-new.html">Novo Processo</a>
+      <a href="validate-internal.html">Validação</a>
+      <a href="validate-bank.html">Banco</a>
+      <a class="active" href="index.html">indexDashboard</a>
+    </nav>
+  </div>
+</header>
+
+<main class="main">
+  <!-- KPIs -->
+  <div class="container grid grid-4">
+    <div class="card kpi"><div class="title">Outstanding</div><div class="value">MZN 12.450.000</div><div class="sub">Carteira atual</div></div>
+    <div class="card kpi"><div class="title">Créditos activos</div><div class="value">482</div><div class="sub">+12 hoje</div></div>
+    <div class="card kpi"><div class="title">NPL (90d+)</div><div class="value">3,6%</div><div class="sub"><span class="badge ok">saudável</span></div></div>
+    <div class="card kpi"><div class="title">DPD 1–30 / 31–60 / 60+</div><div class="value">9% / 4% / 1.8%</div><div class="sub">tendência estável</div></div>
+  </div>
+
+  <div class="container grid grid-2">
+    <!-- Pipeline estados -->
+    <div class="card">
+      <h2 class="card-title">Pipeline de Estados</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Estado</th><th>Qtd</th><th>Tempo médio</th><th>Observações</th></tr></thead>
+          <tbody>
+            <tr><td>CRIADO</td><td>28</td><td>1h12</td><td><span class="badge info">entrada</span></td></tr>
+            <tr><td>EM VALIDAÇÃO (KYC)</td><td>19</td><td>2h30</td><td><span class="badge warn">atenção</span></td></tr>
+            <tr><td>EM ANÁLISE BANCO</td><td>11</td><td>3h20</td><td>—</td></tr>
+            <tr><td>ATIVO</td><td>482</td><td>—</td><td><span class="badge ok">carteira</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Carteira por risco -->
+    <div class="card">
+      <h2 class="card-title">Carteira por Risco</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Segmento</th><th>Clientes</th><th>Montante</th><th>DPD médio</th></tr></thead>
+          <tbody>
+            <tr><td>Score A/B</td><td>212</td><td>MZN 6.1M</td><td>4d</td></tr>
+            <tr><td>Score C</td><td>170</td><td>MZN 4.0M</td><td>9d</td></tr>
+            <tr><td>Score D/E</td><td>100</td><td>MZN 2.35M</td><td>21d</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Prestações de hoje -->
+    <div class="card" style="grid-column:1/-1">
+      <h2 class="card-title">Prestações do dia</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Loan</th><th>Cliente</th><th>Vencimento</th><th>Prestação</th><th>Status</th><th>Acção</th></tr></thead>
+          <tbody>
+            <tr><td>L-1001</td><td>Ana João</td><td>Hoje</td><td>MZN 7 600</td><td><span class="badge warn">Em aberto</span></td><td><button class="btn-outline">Registar pagamento</button></td></tr>
+            <tr><td>L-0998</td><td>G. Tamele</td><td>Hoje</td><td>MZN 4 200</td><td><span class="badge ok">Pago</span></td><td>—</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- NPL e monitoria -->
+    <div class="card" style="grid-column:1/-1">
+      <h2 class="card-title">Monitoria de NPL / DPD</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Faixa DPD</th><th>Qtd</th><th>% Carteira</th><th>Estratégia</th></tr></thead>
+          <tbody>
+            <tr><td>1–30</td><td>43</td><td>9.0%</td><td>Lembretes SMS/WhatsApp + M-Pesa</td></tr>
+            <tr><td>31–60</td><td>19</td><td>4.0%</td><td>Contacto call-center + acordo</td></tr>
+            <tr><td>&gt; 60</td><td>9</td><td>1.8%</td><td>Plano de reestruturação / jurídico</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="hint">NPL (90d+): 3,6% — alvo &lt; 4,0%.</div>
+    </div>
+  </div>
+</main>
+
+<nav class="footer-nav">
+  <a href="./process-new.html">Novo</a>
+  <a href="./validate-internal.html">Validação</a>
+  <a href="./validate-bank.html">Banco</a>
+  <a class="active" href="./dashboard.html">Dash</a>
+</nav>
+</body>
+</html>

@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>CACOS • KYC</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<header class="header">
+  <div class="header-inner">
+    <div class="brand">
+      <img src="logo-cacos.jpg" alt="CACOS" style="height:28px;object-fit:contain" />
+      <span class="brand-name">CACOS</span>
+    </div>
+    <nav class="topnav">
+      <a href="index.html">Dashboard</a>
+      <a class="active" href="kyc.html">KYC</a>
+      <a href="lam-validacao.html">Pré-aprovação</a>
+    </nav>
+  </div>
+</header>
+
+<main class="main">
+  <div class="container grid grid-2">
+    <!-- Formulário KYC -->
+    <form class="card grid grid-2" style="gap:12px">
+      <h2 class="card-title" style="grid-column:1/-1">Dados de KYC</h2>
+
+      <!-- Identificação do cliente -->
+      <input class="input" placeholder="Nome completo*" required />
+      <input class="input" placeholder="Telefone (ex: +258 84…)*" required />
+      <input class="input" placeholder="Email" type="email" />
+      <input class="input" placeholder="NUIT (cliente)" />
+      <select class="select">
+        <option>Género</option><option>Feminino</option><option>Masculino</option><option>Outro</option>
+      </select>
+      <input class="input" placeholder="Data de nascimento*" type="date" required />
+      <input class="input" placeholder="Documento (BI/Passaporte)*" required />
+      <input class="input" placeholder="Validade do documento*" type="date" required />
+      <input class="input" placeholder="Morada (Bairro, Rua, Nº)" style="grid-column:1/-1" />
+
+      <!-- Dados do Empregador -->
+      <div class="card" style="grid-column:1/-1">
+        <div class="card-title" style="margin-bottom:6px">Emprego (para verificação de rendimento)</div>
+        <div class="grid grid-2" style="gap:10px">
+          <input class="input" placeholder="Empregador / Entidade*" required />
+          <input class="input" placeholder="NUIT do empregador" />
+          <input class="input" placeholder="Orgânica / Departamento" />
+          <input class="input" placeholder="Função do cliente" />
+          <input class="input" placeholder="Endereço do empregador (Bairro, Rua, Nº)" style="grid-column:1/-1" />
+        </div>
+
+        <div class="grid grid-2" style="gap:10px;margin-top:8px">
+          <div class="card">
+            <div class="card-title" style="margin-bottom:6px">Supervisor 1</div>
+            <div class="grid grid-2" style="gap:8px">
+              <input class="input" placeholder="Nome do supervisor 1" />
+              <input class="input" placeholder="Contacto do supervisor 1 (ex: +258 …)" />
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title" style="margin-bottom:6px">Supervisor 2</div>
+            <div class="grid grid-2" style="gap:8px">
+              <input class="input" placeholder="Nome do supervisor 2" />
+              <input class="input" placeholder="Contacto do supervisor 2 (ex: +258 …)" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dados do consultor (quem capturou o processo) -->
+      <div class="card" style="grid-column:1/-1">
+        <div class="card-title" style="margin-bottom:6px">Consultor (captura do processo)</div>
+        <div class="grid grid-2" style="gap:10px">
+          <input class="input" placeholder="Nome do consultor*" required />
+          <input class="input" placeholder="Contacto do consultor (ex: +258 …)*" required />
+        </div>
+        <div class="grid grid-2" style="gap:10px;margin-top:8px">
+          <input class="input" placeholder="Banco (ex: BCI, Millennium, Standard Bank)" />
+          <input class="input" placeholder="NIB / IBAN" />
+          <input class="input" placeholder="Carteira móvel (ex: M-Pesa, e-Mola)" style="grid-column:1/-1" />
+        </div>
+        <div class="hint" style="margin-top:6px">Pelo menos um meio de pagamento deve ser indicado (NIB/IBAN ou carteira móvel).</div>
+      </div>
+
+      <div class="hint" style="grid-column:1/-1">*Campos obrigatórios</div>
+
+      <!-- Documentos -->
+      <div class="card" style="grid-column:1/-1">
+        <div class="card-title" style="margin-bottom:8px">Documentos</div>
+        <div class="row">
+          <div class="inline">
+            <input class="input" type="file" /> <span class="hint">Cópia do BI/Passaporte</span>
+          </div>
+          <div class="inline">
+            <input class="input" type="file" /> <span class="hint">Comprovativo de residência</span>
+          </div>
+          <div class="inline">
+            <input class="input" type="file" /> <span class="hint">Comprovativo de rendimento (3 meses)</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="inline" style="grid-column:1/-1">
+        <button class="btn-primary" type="submit">Guardar KYC</button>
+        <button type="reset" class="btn-ghost">Limpar</button>
+      </div>
+    </form>
+
+    <!-- Submissões recentes -->
+    <div class="card">
+      <h2 class="card-title">Submissões recentes</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Cliente</th><th>Documento</th><th>Estado</th><th>Acção</th></tr></thead>
+          <tbody>
+            <tr><td>Ana João</td><td>BI 123456</td><td><span class="badge ok">KYC completo</span></td><td><a href="./lam-validacao.html">Validar</a></td></tr>
+            <tr><td>Carlos M.</td><td>BI 654321</td><td><span class="badge warn">Pendente doc</span></td><td><a href="./lam-validacao.html">Validar</a></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</main>
+
+<nav class="footer-nav">
+  <a href="./dashboard.html">Dashboard</a>
+  <a class="active" href="./kyc.html">KYC</a>
+  <a href="./lam-validacao.html">Pré-aprov.</a>
+</nav>
+</body>
+</html>

@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>CACOS • Pré-aprovação (LAM)</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<header class="header">
+  <div class="header-inner">
+    <div class="brand">
+      <img src="logo-cacos.jpg" alt="CACOS" style="height:28px" />
+      <span class="brand-name">CACOS</span>
+    </div>
+    <nav class="topnav">
+      <a href="index.html">Dashboard</a>
+      <a href="kyc.html">KYC</a>
+      <a class="active" href="lam-validacao.html">Pré-aprovação</a>
+    </nav>
+  </div>
+</header>
+
+<main class="main">
+  <div class="container grid grid-2">
+    <!-- Fila / Lista para validar -->
+    <div class="card">
+      <h2 class="card-title">Fila de validação</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Cliente</th><th>Completeness</th><th>Score</th><th>Flags</th><th></th></tr></thead>
+          <tbody>
+            <tr>
+              <td>Ana João</td>
+              <td><span class="badge ok">100%</span></td>
+              <td><span class="badge info">B+</span></td>
+              <td><span class="badge ok">Rendimento OK</span></td>
+              <td><a href="#painel">Abrir</a></td>
+            </tr>
+            <tr>
+              <td>Carlos M.</td>
+              <td><span class="badge warn">76%</span></td>
+              <td><span class="badge warn">C</span></td>
+              <td><span class="badge err">Residência duvidosa</span></td>
+              <td><a href="#painel">Abrir</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Painel de decisão LAM -->
+    <div id="painel" class="card">
+      <h2 class="card-title">Pré-aprovação (LAM)</h2>
+
+      <div class="grid grid-2" style="gap:10px">
+        <div class="card">
+          <div class="card-title" style="margin-bottom:8px">Resumo KYC</div>
+          <div class="hint">Nome: Ana João</div>
+          <div class="hint">Doc: BI 123456 (válido até 2028-12-31)</div>
+          <div class="hint">Rendimento: MZN 45.000/mês</div>
+          <div class="hint">Score interno: B+</div>
+        </div>
+
+        <div class="card">
+          <div class="card-title" style="margin-bottom:8px">Regras LAM aplicadas</div>
+          <ul class="hint" style="margin:0;padding-left:16px">
+            <li>Documento válido ✔</li>
+            <li>Comprovativo de residência ✔</li>
+            <li>Rácio dívida/rendimento &lt; 35% ✔</li>
+            <li>Lista de sanções/PEP ✖ (não encontrado)</li>
+          </ul>
+        </div>
+
+        <div class="card" style="grid-column:1/-1">
+          <div class="card-title" style="margin-bottom:8px">Proposta</div>
+          <div class="row">
+            <div class="inline">
+              <input class="input" placeholder="Montante proposto (MZN)" />
+              <select class="select" style="max-width:160px"><option>Prazo (meses)</option><option>6</option><option>9</option><option>12</option><option>18</option></select>
+              <input class="input" placeholder="Taxa de juro (a.a. %)" style="max-width:160px" />
+            </div>
+            <div class="hint">Sugestão LAM: até MZN 80.000 • 12M • 24% a.a. (com base no score).</div>
+          </div>
+        </div>
+
+        <div class="inline" style="grid-column:1/-1">
+          <button class="btn-success">Pré-aprovar</button>
+          <button class="btn-danger">Rejeitar</button>
+          <button class="btn-outline">Pedir complementar</button>
+        </div>
+      </div>
+
+      <div class="hint" style="margin-top:8px">Ao **pré-aprovar**, o processo avança para **Aprovação Final** e criação do contrato.</div>
+    </div>
+  </div>
+</main>
+
+<nav class="footer-nav">
+  <a href="./dashboard.html">Dashboard</a>
+  <a href="./kyc.html">KYC</a>
+  <a class="active" href="./lam-validacao.html">Pré-aprov.</a>
+</nav>
+</body>
+</html>
