@@ -128,7 +128,7 @@ function render(){
 
   $('#tbody').innerHTML = items.map(x => `
     <tr>
-      <td>${x.p.id}</td>
+      <td>${x.l.id}</td>
       <td>${x.c.nome || '(desconhecido)'}</td>
       <td>${fmt(x.p.proposta?.montante)}</td>
       <td>${fmt(x.l.installment)}</td>
@@ -150,3 +150,4 @@ render();
 
 </body>
 </html>
+
