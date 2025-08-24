@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="pt">
+<head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>CACOS • Clientes</title>
+<link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+<header class="header">
+  <div class="header-inner">
+    <div class="brand">
+      <img src="logo-cacos.jpg" alt="CACOS" style="height:28px"/>
+      <span class="brand-name">CACOS</span>
+    </div>
+    <nav class="topnav">
+      <a href="index.html">Dashboard</a>
+      <a href="loans.html">Créditos</a>
+      <a href="clients.html">Clientes</a>
+      <a href="validate-internal.html">Validação Interna</a>
+      <a href="validate-bank.html">Validação Banco</a>
+      <a href="process-new.html">Novo Processo</a>
+    </nav>
+  </div>
+</header>
+
+<main class="main">
+  <div class="container">
+    <div class="card">
+      <div class="inline" style="justify-content:space-between;gap:8px;flex-wrap:wrap">
+        <h2 class="card-title" style="margin:0">Clientes</h2>
+        <input id="q" class="input" placeholder="Pesquisar por nome ou telefone…" style="max-width:320px"/>
+      </div>
+
+      <div class="table-wrap" style="margin-top:10px">
+        <table>
+          <thead><tr>
+            <th>Cliente</th><th>Contacto</th><th>Contratos</th><th>Outstanding</th><th>Último movimento</th><th></th>
+          </tr></thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</main>
+
+<nav class="footer-nav">
+  <a href="process-new.html">Novo</a>
+  <a href="index.html">Dash</a>
+  <a class="active" href="clients.html">Clientes</a>
+</nav>
+
+<!-- utils -->
+<script src="storage.js"></script>
+<script>
+function render(list){
+  const loans = JSON.parse(localStorage.getItem('cacos_loans')||'[]');
+  const pays  = JSON.parse(localStorage.getItem('cacos_payments')||'[]');
+  const lastPayByLoan = Object.fromEntries(pays.sort((a,b)=>b.date.localeCompare(a.date)).map(p=>[p.loanId,p.date]));
+  rows.innerHTML = list.map(c=>{
+    const myLoans = loans.filter(l=>l.clientId===c.id);
+    const outstanding = myLoans.reduce((s,l)=> s + DBApi.loanOutstanding(l), 0);
+    const last = myLoans.map(l=>lastPayByLoan[l.id]||'').sort().reverse()[0] || '—';
+    return `<tr>
+      <td>${c.nome}</td>
+      <td>${c.telefone||'—'}</td>
+      <td>${myLoans.length}</td>
+      <td>${DBApi.fmtMZN(outstanding)}</td>
+      <td>${last}</td>
+      <td><a class="btn-outline" href="client.html?id=${c.id}">Abrir</a></td>
+    </tr>`;
+  }).join('') || `<tr><td colspan="6" class="hint">Sem clientes.</td></tr>`;
+}
+
+const all = DBApi.listClients();
+const rows = document.getElementById('rows');
+render(all);
+
+q.addEventListener('input', e=>{
+  const v = e.target.value.toLowerCase().trim();
+  render(all.filter(c=>
+     (c.nome||'').toLowerCase().includes(v) ||
+     (c.telefone||'').toLowerCase().includes(v)
+  ));
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>CACOS • Créditos</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+<header class="header">
+  <div class="header-inner">
+    <div class="brand">
+      <img src="logo-cacos.jpg" alt="CACOS" style="height:28px"/>
+      <span class="brand-name">CACOS</span>
+    </div>
+    <nav class="topnav">
+      <a href="index.html">Dashboard</a>
+      <a href="loans.html">Créditos</a>
+      <a href="clients.html">Clientes</a>
+      <a href="validate-internal.html">Validação Interna</a>
+      <a href="validate-bank.html">Validação Banco</a>
+      <a href="process-new.html">Novo Processo</a>
+    </nav>
+  </div>
+</header>
+
+<main class="main">
+  <div class="container">
+    <div class="card">
+      <h2 class="card-title">Créditos</h2>
+
+      <!-- filtros -->
+      <div class="inline" style="gap:8px; flex-wrap:wrap; margin-bottom:10px">
+        <input id="q" class="input" placeholder="Procurar por cliente / ID"/>
+        <select id="fState" class="select" style="max-width:220px">
+          <option value="">Todos estados</option>
+          <option value="ATIVO">Ativos</option>
+          <option value="VALID">Em validação</option>
+          <option value="ATRASO">Em atraso</option>
+          <option value="LIQ">Liquidados</option>
+          <option value="NE">Não elegíveis</option>
+        </select>
+        <button class="btn" id="btnClear">Limpar</button>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Loan</th><th>Cliente</th><th>Montante</th><th>Prestação</th>
+              <th>Prazo</th><th>Estado</th><th>DPD</th><th>Próx. venc.</th><th>Acção</th>
+            </tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</main>
+
+<nav class="footer-nav">
+  <a href="process-new.html">Novo</a>
+  <a href="validate-internal.html">Validação</a>
+  <a href="clients.html">Clientes</a>
+  <a class="active" href="loans.html">Créditos</a>
+  <a href="index.html">Dash</a>
+</nav>
+
+<script src="storage.js"></script>
+<script>
+const $ = s => document.querySelector(s);
+const fmt = DBApi.fmtMZN;
+
+function stateBadgeClass(state) {
+  if (!state) return 'badge';
+  if (state.includes('ATRASO')) return 'badge warn';
+  if (state.includes('VALIDAÇÃO')) return 'badge info';
+  if (state.includes('ATIVO')) return 'badge ok';
+  if (state.includes('LIQUID')) return 'badge';
+  if (state.includes('NÃO ELEG')) return 'badge err';
+  return 'badge';
+}
+
+function matchFilterState(fs, state){
+  if (!fs) return true;
+  if (fs==='VALID')   return state.includes('VALIDAÇÃO');
+  if (fs==='NE')      return state.includes('NÃO ELEG');
+  if (fs==='LIQ')     return state.includes('LIQUID');
+  if (fs==='ATRASO')  return state.includes('ATRASO');
+  if (fs==='ATIVO')   return state==='ATIVO';
+  return true;
+}
+
+function nextDue(loan){
+  const pays = DBApi.listPayments(loan.id);
+  const d = new Date(loan.startDate);
+  d.setMonth(d.getMonth() + pays.length + 1);
+  return d;
+}
+
+function render(){
+  const q  = $('#q').value.trim().toLowerCase();
+  const fs = $('#fState').value;
+
+  const loans   = DBApi.listLoans();
+  const procs   = DBApi.listProcesses();
+  const clients = DBApi.listClients();
+
+  const byProc  = Object.fromEntries(procs.map(p=>[p.id,p]));
+  const byCli   = Object.fromEntries(clients.map(c=>[c.id,c]));
+
+  let items = loans.map(l => {
+    const p = byProc[l.processId] || {};
+    const c = byCli[l.clientId]  || {};
+    const state = p.state || 'ATIVO';
+    const dpd = DBApi.loanDPD(l);
+    const due = nextDue(l);
+    return { l, p, c, state, dpd, due };
+  });
+
+  items = items.filter(x => {
+    const okQ = !q || (String(x.l.id).toLowerCase().includes(q) ||
+                       String(x.p.id||'').toLowerCase().includes(q) ||
+                       (x.c.nome||'').toLowerCase().includes(q));
+    const okS = matchFilterState(fs, x.state);
+    return okQ && okS;
+  });
+
+  $('#tbody').innerHTML = items.map(x => `
+    <tr>
+      <td>${x.p.id}</td>
+      <td>${x.c.nome || '(desconhecido)'}</td>
+      <td>${fmt(x.p.proposta?.montante)}</td>
+      <td>${fmt(x.l.installment)}</td>
+      <td>${x.p.proposta?.prazoMeses || x.l.term}m</td>
+      <td><span class="${stateBadgeClass(x.state)}">${x.state}</span></td>
+      <td>${x.dpd? x.dpd+'d' : ''}</td>
+      <td>${isNaN(x.due)? '—' : x.due.toLocaleDateString('pt-PT')}</td>
+      <td><a class="btn-outline" href="loan.html?id=${encodeURIComponent(x.l.id)}">Ver</a></td>
+    </tr>
+  `).join('') || `<tr><td colspan="9" class="hint">Sem registos.</td></tr>`;
+}
+
+$('#q').addEventListener('input', render);
+$('#fState').addEventListener('change', render);
+$('#btnClear').addEventListener('click', ()=>{ $('#q').value=''; $('#fState').value=''; render(); });
+
+render();
+</script>
+
+</body>
+</html>

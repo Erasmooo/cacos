@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="pt">
+<head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>CACOS • Validação</title>
+<link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+<header class="header">
+  <div class="header-inner">
+    <div class="brand">
+      <img src="logo-cacos.jpg" alt="CACOS" style="height:28px"/>
+      <span class="brand-name">CACOS</span>
+    </div>
+    <nav class="topnav">
+      <a href="index.html">Dashboard</a>
+      <a href="loans.html">Créditos</a>
+      <a href="clients.html">Clientes</a>
+      <a href="validate-internal.html">Validação Interna</a>
+      <a href="validate-bank.html">Validação Banco</a>
+      <a href="process-new.html">Novo Processo</a>
+    </nav>
+  </div>
+</header>
+
+<main class="main">
+  <div class="container">
+    <div class="card">
+      <h2 class="card-title">Em validação (KYC)</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th><th>Cliente</th><th>Proposta</th><th>Estado</th><th style="width:280px">Acção</th>
+            </tr>
+          </thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</main>
+
+<nav class="footer-nav">
+  <a href="process-new.html">Novo</a>
+  <a class="active" href="validate-internal.html">Validação</a>
+  <a href="validate-bank.html">Banco</a>
+  <a href="index.html">Dash</a>
+</nav>
+
+<script src="storage.js"></script>
+<script>
+const rows = document.getElementById('rows');
+
+function render(){
+  const ps = DBApi.listProcesses().filter(p=>p.state==='EM VALIDAÇÃO (KYC)');
+  const clients = DBApi.listClients(); 
+  const byId = Object.fromEntries(clients.map(c=>[c.id,c]));
+  rows.innerHTML = ps.map(p=>{
+    const c = byId[p.clientId];
+    const resumo = `${DBApi.fmtMZN(p.proposta.montante)} • ${p.proposta.prazoMeses}m • ${p.proposta.taxaAnual}%`;
+    const when = new Date(p.updatedAt||p.createdAt).toLocaleString('pt-PT');
+    return `
+      <tr>
+        <td><a href="process.html?id=${p.id}" title="Abrir processo">${p.id}</a></td>
+        <td>${c?.nome||'—'}<div class="hint">${when}</div></td>
+        <td>${resumo}</td>
+        <td><span class="badge info">${p.state}</span></td>
+        <td class="inline">
+          <a class="btn-outline" href="process.html?id=${p.id}">Abrir</a>
+          <button class="btn-success" data-act="approve" data-id="${p.id}">Aprovar</button>
+          <button class="btn-ghost"  data-act="docs" data-id="${p.id}">Pedir docs</button>
+          <button class="btn-danger"  data-act="reject" data-id="${p.id}">Rejeitar</button>
+        </td>
+      </tr>`;
+  }).join('') || `<tr><td colspan="5" class="hint">Sem itens.</td></tr>`;
+}
+render();
+
+// delegação de eventos para os botões
+rows.addEventListener('click', (e)=>{
+  const btn = e.target.closest('button[data-act]');
+  if(!btn) return;
+  const id = btn.getAttribute('data-id');
+  const act = btn.getAttribute('data-act');
+  const ps = DBApi.listProcesses();
+  const p = ps.find(x=>x.id===id);
+  if(!p) return;
+
+  if(act==='approve'){
+    if(confirm('Aprovar KYC e enviar para análise do Banco?')){
+      p.state = 'EM ANÁLISE BANCO';
+      p.updatedAt = Date.now();
+      DBApi.updateProcess(p);
+      alert('Enviado para o Banco.');
+      render();
+    }
+  }
+  if(act==='docs'){
+    const motivo = prompt('Descreve os documentos/observações a solicitar (opcional):','');
+    p.state = 'PENDENTE DOCUMENTOS';
+    p.updatedAt = Date.now();
+    p.kyc = p.kyc || {};
+    p.kyc.pendencias = motivo||'';
+    DBApi.updateProcess(p);
+    alert('Marcado como pendente de documentos.');
+    render();
+  }
+  if(act==='reject'){
+    if(confirm('Reprovar este processo por KYC?')){
+      p.state = 'REPROVADO (KYC)';
+      p.updatedAt = Date.now();
+      DBApi.updateProcess(p);
+      alert('Processo reprovado.');
+      render();
+    }
+  }
+});
+</script>
+</body>
+</html>

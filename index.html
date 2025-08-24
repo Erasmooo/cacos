@@ -1,102 +1,138 @@
 <!doctype html>
 <html lang="pt">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>CACOS • Dashboard</title>
-  <link rel="stylesheet" href="style.css" />
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>CACOS • Dashboard</title>
+<link rel="stylesheet" href="style.css"/>
 </head>
 <body>
 <header class="header">
   <div class="header-inner">
-    <div class="brand"><img src="logo-cacos.jpg" style="height:28px" /><span class="brand-name">CACOS</span></div>
+    <div class="brand">
+      <img src="logo-cacos.jpg" alt="CACOS" style="height:28px"/>
+      <span class="brand-name">CACOS</span>
+    </div>
     <nav class="topnav">
+      <a href="index.html">Dashboard</a>
+      <a href="loans.html">Créditos</a>
+      <a href="clients.html">Clientes</a>
+      <a href="validate-internal.html">Validação Interna</a>
+      <a href="validate-bank.html">Validação Banco</a>
       <a href="process-new.html">Novo Processo</a>
-      <a href="validate-internal.html">Validação</a>
-      <a href="validate-bank.html">Banco</a>
-      <a class="active" href="index.html">indexDashboard</a>
     </nav>
   </div>
 </header>
 
 <main class="main">
-  <!-- KPIs -->
-  <div class="container grid grid-4">
-    <div class="card kpi"><div class="title">Outstanding</div><div class="value">MZN 12.450.000</div><div class="sub">Carteira atual</div></div>
-    <div class="card kpi"><div class="title">Créditos activos</div><div class="value">482</div><div class="sub">+12 hoje</div></div>
-    <div class="card kpi"><div class="title">NPL (90d+)</div><div class="value">3,6%</div><div class="sub"><span class="badge ok">saudável</span></div></div>
-    <div class="card kpi"><div class="title">DPD 1–30 / 31–60 / 60+</div><div class="value">9% / 4% / 1.8%</div><div class="sub">tendência estável</div></div>
-  </div>
+  <div class="container grid grid-4" id="kpis"></div>
 
-  <div class="container grid grid-2">
-    <!-- Pipeline estados -->
-    <div class="card">
-      <h2 class="card-title">Pipeline de Estados</h2>
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>Estado</th><th>Qtd</th><th>Tempo médio</th><th>Observações</th></tr></thead>
-          <tbody>
-            <tr><td>CRIADO</td><td>28</td><td>1h12</td><td><span class="badge info">entrada</span></td></tr>
-            <tr><td>EM VALIDAÇÃO (KYC)</td><td>19</td><td>2h30</td><td><span class="badge warn">atenção</span></td></tr>
-            <tr><td>EM ANÁLISE BANCO</td><td>11</td><td>3h20</td><td>—</td></tr>
-            <tr><td>ATIVO</td><td>482</td><td>—</td><td><span class="badge ok">carteira</span></td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- Carteira por risco -->
-    <div class="card">
-      <h2 class="card-title">Carteira por Risco</h2>
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>Segmento</th><th>Clientes</th><th>Montante</th><th>DPD médio</th></tr></thead>
-          <tbody>
-            <tr><td>Score A/B</td><td>212</td><td>MZN 6.1M</td><td>4d</td></tr>
-            <tr><td>Score C</td><td>170</td><td>MZN 4.0M</td><td>9d</td></tr>
-            <tr><td>Score D/E</td><td>100</td><td>MZN 2.35M</td><td>21d</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- Prestações de hoje -->
-    <div class="card" style="grid-column:1/-1">
-      <h2 class="card-title">Prestações do dia</h2>
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>Loan</th><th>Cliente</th><th>Vencimento</th><th>Prestação</th><th>Status</th><th>Acção</th></tr></thead>
-          <tbody>
-            <tr><td>L-1001</td><td>Ana João</td><td>Hoje</td><td>MZN 7 600</td><td><span class="badge warn">Em aberto</span></td><td><button class="btn-outline">Registar pagamento</button></td></tr>
-            <tr><td>L-0998</td><td>G. Tamele</td><td>Hoje</td><td>MZN 4 200</td><td><span class="badge ok">Pago</span></td><td>—</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- NPL e monitoria -->
-    <div class="card" style="grid-column:1/-1">
-      <h2 class="card-title">Monitoria de NPL / DPD</h2>
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>Faixa DPD</th><th>Qtd</th><th>% Carteira</th><th>Estratégia</th></tr></thead>
-          <tbody>
-            <tr><td>1–30</td><td>43</td><td>9.0%</td><td>Lembretes SMS/WhatsApp + M-Pesa</td></tr>
-            <tr><td>31–60</td><td>19</td><td>4.0%</td><td>Contacto call-center + acordo</td></tr>
-            <tr><td>&gt; 60</td><td>9</td><td>1.8%</td><td>Plano de reestruturação / jurídico</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="hint">NPL (90d+): 3,6% — alvo &lt; 4,0%.</div>
-    </div>
-  </div>
+  <div class="container grid grid-2" id="boards"></div>
 </main>
 
 <nav class="footer-nav">
-  <a href="./process-new.html">Novo</a>
-  <a href="./validate-internal.html">Validação</a>
-  <a href="./validate-bank.html">Banco</a>
-  <a class="active" href="./dashboard.html">Dash</a>
+  <a href="process-new.html">Novo</a>
+  <a href="validate-internal.html">Validação</a>
+  <a href="clients.html">Clientes</a>
+  <a class="active" href="index.html">Dash</a>
 </nav>
+
+<script src="storage.js"></script>
+<script>
+/* KPIs */
+const loans = DBApi.listLoans();
+const totalOut = loans.reduce((s,l)=> s + DBApi.loanOutstanding(l), 0);
+const activeLoans = loans.length;
+const npl = loans.filter(l=> DBApi.loanDPD(l) >= 90).length;
+const nplPct = activeLoans ? (npl/activeLoans*100) : 0;
+
+kpis.innerHTML = `
+  <div class="card kpi"><div class="title">Outstanding</div><div class="value">${DBApi.fmtMZN(totalOut)}</div><div class="sub">Carteira actual</div></div>
+  <div class="card kpi"><div class="title">Créditos activos</div><div class="value">${activeLoans}</div><div class="sub">${new Date().toLocaleDateString('pt-PT')}</div></div>
+  <div class="card kpi"><div class="title">NPL (90d+)</div><div class="value">${nplPct.toFixed(1)}%</div><div class="sub"><span class="badge ${nplPct<4?'ok':'warn'}">${npl} contratos</span></div></div>
+  <div class="card kpi"><div class="title">DPD 1–30 / 31–60 / 60+</div><div class="value">${
+    [1,31,61].map((x,i)=>{
+      const lim=[30,60,999][i];
+      const cnt = loans.filter(l=>{ const d=DBApi.loanDPD(l); return d>=x && d<=lim; }).length;
+      const pct = activeLoans? (cnt/activeLoans*100).toFixed(1):'0.0';
+      return `${pct}%`;
+    }).join(' / ')
+  }</div><div class="sub">tendência</div></div>
+`;
+
+/* Boards */
+const procs = DBApi.listProcesses();
+function boardPipeline(){
+  const states = ["CRIADO","EM VALIDAÇÃO (KYC)","EM ANÁLISE BANCO","ATIVO"];
+  const rows = states.map(s=>{
+    const list = procs.filter(p=>p.state===s);
+    const avg = list.length ? (list.reduce((a,p)=>a+(Date.now()-(p.updatedAt||p.createdAt)),0)/list.length/3600000).toFixed(1)+'h' : '—';
+    const tag = s.includes('VALIDAÇÃO')?'info': s==='ATIVO'?'ok':'';
+    return `<tr><td>${s}</td><td>${list.length}</td><td>${avg}</td><td>${tag?`<span class="badge ${tag}">${tag==='ok'?'carteira':'entrada'}</span>`:'—'}</td></tr>`;
+  }).join('');
+  return `<div class="card">
+    <h2 class="card-title">Pipeline de Estados</h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Estado</th><th>Qtd</th><th>Tempo médio</th><th>Obs</th></tr></thead>
+      <tbody>${rows}</tbody></table></div></div>`;
+}
+
+function boardRisk(){
+  const segs = { "Score A/B":[], "Score C":[], "Score D/E":[] };
+  loans.forEach(l=>{
+    const d=DBApi.loanDPD(l); const out=DBApi.loanOutstanding(l);
+    const key = d<=10?"Score A/B": d<=30?"Score C":"Score D/E";
+    segs[key].push({out});
+  });
+  const row = (name) => {
+    const list = segs[name]; const cnt=list.length; const mzn=list.reduce((s,x)=>s+x.out,0);
+    const dpd = name==="Score A/B"?"4d":name==="Score C"?"9d":"21d";
+    return `<tr><td>${name}</td><td>${cnt}</td><td>${DBApi.fmtMZN(mzn)}</td><td>${dpd}</td></tr>`;
+  };
+  return `<div class="card">
+    <h2 class="card-title">Carteira por Risco</h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Segmento</th><th>Clientes</th><th>Montante</th><th>DPD médio</th></tr></thead>
+      <tbody>${row("Score A/B")+row("Score C")+row("Score D/E")}</tbody></table></div></div>`;
+}
+
+function boardToday(){
+  // prestações de "hoje": vencimento no mesmo dia do mês do startDate
+  const day = new Date().getDate();
+  const due = loans.filter(l=> new Date(l.startDate).getDate()===day);
+  return `<div class="card" style="grid-column:1/-1">
+    <h2 class="card-title">Prestações do dia</h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Loan</th><th>Cliente</th><th>Vencimento</th><th>Prestação</th><th>DPD</th><th>Acção</th></tr></thead>
+      <tbody>${
+        due.map(l=>{
+          const c = DBApi.getClient(l.clientId);
+          const dpd=DBApi.loanDPD(l);
+          const badge = dpd>0?`<span class="badge ${dpd>30?'warn':'info'}">${dpd}d</span>`:`<span class="badge ok">a tempo</span>`;
+          return `<tr><td>${l.id}</td><td>${c?.nome||'—'}</td><td>Hoje</td><td>${DBApi.fmtMZN(l.installment)}</td><td>${badge}</td>
+          <td><a class="btn-outline" href="payment-new.html?loanId=${l.id}&clientId=${l.clientId}">Registar</a></td></tr>`;
+        }).join('') || `<tr><td colspan="6" class="hint">Sem prestações hoje.</td></tr>`
+      }</tbody></table></div></div>`;
+}
+
+function boardNPL(){
+  const r = [ {"Faixa":"1–30"},{"Faixa":"31–60"},{"Faixa":"60+"} ].map(b=>{
+    const [a,bmax] = b.Faixa==="1–30" ? [1,30] : b.Faixa==="31–60" ? [31,60] : [61,9999];
+    const list = loans.filter(l=>{ const d=DBApi.loanDPD(l); return d>=a && d<=bmax; });
+    const share = activeLoans? (list.length/activeLoans*100).toFixed(1)+'%':'0%';
+    const strat = b.Faixa==="1–30" ? "Lembrete SMS/WhatsApp + M-Pesa"
+               : b.Faixa==="31–60" ? "Contacto + acordo"
+               : "Reestruturação / jurídico";
+    return `<tr><td>${b.Faixa}</td><td>${list.length}</td><td>${share}</td><td>${strat}</td></tr>`;
+  }).join('');
+  return `<div class="card" style="grid-column:1/-1">
+    <h2 class="card-title">Monitoria de NPL / DPD</h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Faixa DPD</th><th>Qtd</th><th>% Carteira</th><th>Estratégia</th></tr></thead>
+      <tbody>${r}</tbody></table></div>
+    <div class="hint">NPL (90d+): ${nplPct.toFixed(1)}% — alvo &lt; 4,0%.</div></div>`;
+}
+
+boards.innerHTML = boardPipeline() + boardRisk() + boardToday() + boardNPL();
+</script>
 </body>
 </html>

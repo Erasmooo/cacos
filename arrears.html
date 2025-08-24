@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="pt">
+<head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>CACOS • Em mora</title>
+<link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+<header class="header">
+  <div class="header-inner">
+    <div class="brand">
+      <img src="logo-cacos.jpg" alt="CACOS" style="height:28px"/>
+      <span class="brand-name">CACOS</span>
+    </div>
+    <nav class="topnav">
+      <a href="index.html">Dashboard</a>
+      <a href="loans.html">Créditos</a>
+      <a href="clients.html">Clientes</a>
+      <a href="validate-internal.html">Validação Interna</a>
+      <a href="validate-bank.html">Validação Banco</a>
+      <a href="process-new.html">Novo Processo</a>
+    </nav>
+  </div>
+</header>
+
+<main class="main">
+  <div class="container grid grid-2" id="root"></div>
+</main>
+
+<nav class="footer-nav">
+  <a href="index.html">Dash</a>
+  <a href="clients.html">Clientes</a>
+  <a class="active" href="arrears.html">Mora</a>
+</nav>
+
+<script src="storage.js"></script>
+<script>
+const clients = DBApi.listClients();
+const loans   = JSON.parse(localStorage.getItem('cacos_loans')||'[]');
+
+const buckets = { "1–30":[],"31–60":[],"60+":[] };
+loans.forEach(l=>{
+  const dpd = DBApi.loanDPD(l);
+  const b = DBApi.bucket(dpd);
+  if (b!=="OK"){
+    const c = clients.find(x=>x.id===l.clientId);
+    buckets[b].push({
+      loan:l, client:c,
+      outstanding: DBApi.loanOutstanding(l),
+      dpd
+    });
+  }
+});
+
+function card(title, list){
+  const total = list.reduce((s,x)=>s+x.outstanding,0);
+  return `<div class="card">
+    <h2 class="card-title">${title} <span class="hint">(${list.length} loans)</span></h2>
+    <div class="kpi" style="margin-bottom:8px"><div class="title">Outstanding</div><div class="value">${DBApi.fmtMZN(total)}</div></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Cliente</th><th>Loan</th><th>Prestação</th><th>Outstanding</th><th>DPD</th><th></th></tr></thead>
+        <tbody>${list.map(x=>`
+          <tr>
+            <td>${x.client?.nome||'—'}</td>
+            <td>${x.loan.id}</td>
+            <td>${DBApi.fmtMZN(x.loan.installment)}</td>
+            <td>${DBApi.fmtMZN(x.outstanding)}</td>
+            <td><span class="badge ${x.dpd>60?'err':x.dpd>30?'warn':'ok'}">${x.dpd}d</span></td>
+            <td><a class="btn-outline" href="client.html?id=${x.loan.clientId}">Abrir</a></td>
+          </tr>`).join('') || `<tr><td colspan="6" class="hint">Sem itens.</td></tr>`}
+        </tbody>
+      </table>
+    </div>
+  </div>`;
+}
+
+root.innerHTML =
+  card('DPD 1–30', buckets["1–30"]) +
+  card('DPD 31–60', buckets["31–60"]) +
+  card('DPD 60+', buckets["60+"]);
+</script>
+</body>
+</html>

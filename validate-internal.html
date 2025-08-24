@@ -1,88 +1,138 @@
 <!doctype html>
 <html lang="pt">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>CACOS • Validação KYC</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>CACOS • Validação (KYC)</title>
+  <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
 <header class="header">
   <div class="header-inner">
-    <div class="brand"><img src="logo-cacos.jpg" style="height:28px" /><span class="brand-name">CACOS</span></div>
+    <div class="brand">
+      <img src="logo-cacos.jpg" alt="CACOS" style="height:28px"/>
+      <span class="brand-name">CACOS</span>
+    </div>
     <nav class="topnav">
-      <a href="process-new.html">Novo Processo</a>
-      <a class="active" href="validate-internal.html">Validação</a>
-      <a href="validate-bank.html">Banco</a>
       <a href="index.html">Dashboard</a>
+      <a href="loans.html">Créditos</a>
+      <a href="clients.html">Clientes</a>
+      <a href="validate-internal.html">Validação Interna</a>
+      <a href="validate-bank.html">Validação Banco</a>
+      <a href="process-new.html">Novo Processo</a>
     </nav>
   </div>
 </header>
 
 <main class="main">
-  <div class="container grid grid-2">
+  <div class="container">
     <div class="card">
-      <h2 class="card-title">Fila de Validação KYC</h2>
+      <div class="card-title">Em validação (KYC)</div>
+
+      <div class="inline" style="gap:10px;margin:6px 0 12px">
+        <input id="q" class="input" placeholder="Procurar por cliente ou ID…" style="max-width:340px"/>
+        <button class="btn-ghost" id="clear">Limpar</button>
+      </div>
+
       <div class="table-wrap">
         <table>
-          <thead><tr><th>Processo</th><th>Cliente</th><th>Completeness</th><th>Flags</th><th></th></tr></thead>
-          <tbody>
+          <thead>
             <tr>
-              <td>PRC-1021</td><td>Ana João</td>
-              <td><span class="badge ok">100%</span></td>
-              <td><span class="badge ok">Sem flags</span></td>
-              <td><a href="#painel">Abrir</a></td>
+              <th>ID</th><th>Cliente</th><th>Proposta</th><th>Criado</th><th style="min-width:260px">Acção</th>
             </tr>
-            <tr>
-              <td>PRC-1020</td><td>Carlos M.</td>
-              <td><span class="badge warn">76%</span></td>
-              <td><span class="badge err">Residência por confirmar</span></td>
-              <td><a href="#painel">Abrir</a></td>
-            </tr>
-          </tbody>
+          </thead>
+          <tbody id="rows"></tbody>
         </table>
-      </div>
-    </div>
-
-    <div id="painel" class="card">
-      <h2 class="card-title">Painel de Validação</h2>
-
-      <div class="grid grid-2" style="gap:10px">
-        <div class="card">
-          <div class="card-title" style="margin-bottom:8px">Documentos</div>
-          <div class="hint">• BI/Pass (frente/verso) — válido até 2028-12-31</div>
-          <div class="hint">• Comprovativo de residência — OK</div>
-          <div class="hint">• Rendimentos — 3 meses anexados</div>
-        </div>
-
-        <div class="card">
-          <div class="card-title" style="margin-bottom:8px">Análises automáticas</div>
-          <ul class="hint" style="margin:0;padding-left:18px">
-            <li>PEP/Sanções: não encontrado</li>
-            <li>Duplicidade de cliente: não</li>
-            <li>Score preliminar: B+</li>
-          </ul>
-        </div>
-
-        <div class="card" style="grid-column:1/-1">
-          <div class="card-title" style="margin-bottom:8px">Decisão</div>
-          <div class="inline">
-            <button class="btn-success">Aprovar KYC e enviar ao Banco</button>
-            <button class="btn-danger">Rejeitar</button>
-            <button class="btn-outline">Regularizar</button>
-          </div>
-          <div class="hint" style="margin-top:6px">Ao aprovar, o estado muda para <span class="badge info">EM ANÁLISE BANCO</span>.</div>
-        </div>
       </div>
     </div>
   </div>
 </main>
 
 <nav class="footer-nav">
-  <a href="./process-new.html">Novo</a>
-  <a class="active" href="./validate-internal.html">Validação</a>
-  <a href="./validate-bank.html">Banco</a>
-  <a href="./dashboard.html">Dash</a>
+  <a href="process-new.html">Novo</a>
+  <a class="active" href="validate-internal.html">Validação</a>
+  <a href="validate-bank.html">Banco</a>
+  <a href="index.html">Dash</a>
 </nav>
+
+<script src="storage.js"></script>
+<script>
+const rows = document.getElementById('rows');
+const q = document.getElementById('q');
+
+function fmtProposta(p){
+  if(!p) return '—';
+  return `${DBApi.fmtMZN(p.montante)} • ${p.prazoMeses}m • ${p.taxaAnual}%`;
+}
+
+function dataStr(ts){
+  try{ return new Date(ts).toLocaleString('pt-PT'); }catch(e){ return '—'; }
+}
+
+function data(){
+  const procs = DBApi.listProcesses().filter(p=>p.state==='EM VALIDAÇÃO (KYC)'|| 
+    p.state === 'PENDENTE DOCUMENTOS' || 
+    p.state === 'REPROVADO (KYC)');
+  const clients = DBApi.listClients();
+  const byId = Object.fromEntries(clients.map(c=>[c.id,c]));
+  return procs.map(p => ({ p, c: byId[p.clientId] }));
+}
+
+function render(){
+  const term = (q.value||'').trim().toLowerCase();
+  const items = data().filter(({p,c})=>{
+    if(!term) return true;
+    const nome = (c?.nome||'').toLowerCase();
+    return nome.includes(term) || (p.id||'').toLowerCase().includes(term);
+  });
+
+  rows.innerHTML = items.map(({p,c})=>`
+    <tr>
+      <td><a href="process.html?id=${p.id}">${p.id}</a></td>
+      <td>${c?.nome||'—'}</td>
+      <td>${fmtProposta(p.proposta)}</td>
+      <td>${dataStr(p.createdAt)}</td>
+      <td class="inline" style="gap:6px;flex-wrap:wrap">
+        <a class="btn-outline" href="process.html?id=${p.id}">Abrir</a>
+        <button class="btn-success" data-id="${p.id}" data-act="approve">Aprovar</button>
+        <button class="btn-ghost"   data-id="${p.id}" data-act="docs">Pedir docs</button>
+        <button class="btn-danger"  data-id="${p.id}" data-act="reject">Reprovar</button>
+      </td>
+    </tr>
+  `).join('') || `<tr><td colspan="5" class="hint">Sem itens em validação.</td></tr>`;
+}
+
+/* --- Ações --- */
+rows.addEventListener('click', (e)=>{
+  const btn = e.target.closest('button');
+  if(!btn) return;
+  const id = btn.getAttribute('data-id');
+  const act = btn.getAttribute('data-act');
+  const ps = DBApi.listProcesses();
+  const p = ps.find(x=>x.id===id);
+  if(!p) return;
+
+  if(act==='approve'){
+    if(!confirm(`Aprovar KYC e enviar ${p.id} para o Banco?`)) return;
+    p.state = 'EM ANÁLISE BANCO';
+  }else if(act==='docs'){
+    const reason = prompt('Que documentos/observações quer solicitar? (opcional)') || '';
+    p.state = 'PENDENTE DOCUMENTOS';
+    p.kyc = p.kyc || {}; p.kyc.pendencias = reason;
+  }else if(act==='reject'){
+    if(!confirm('Tem a certeza que pretende reprovar este processo por KYC?')) return;
+    p.state = 'REPROVADO (KYC)';
+  }
+  p.updatedAt = Date.now();
+  DBApi.updateProcess(p);
+  render();
+});
+
+/* busca */
+q.addEventListener('input', render);
+document.getElementById('clear').addEventListener('click', ()=>{ q.value=''; render(); });
+
+render();
+</script>
 </body>
 </html>

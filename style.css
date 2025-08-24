@@ -1,61 +1,62 @@
-/* ===== CACOS Design Tokens ===== */
+/* ====== CACOS • Tema leve / profissional • Mobile-first ====== */
 :root{
   --bg:#F7F8FB;
   --surface:#FFFFFF;
-  --text:#111827;
-  --text-strong:#0F2748; /* navy logo */
+  --text:#0F172A;
   --muted:#6B7280;
   --line:#E5E7EB;
 
-  --brand:#0F2748;
-  --grad-from:#D62976;   /* magenta */
-  --grad-to:#F59E0B;     /* laranja */
+  --brand:#0F2748;            /* azul do logotipo */
+  --grad-from:#D62976;         /* magenta do símbolo */
+  --grad-to:#F59E0B;           /* laranja do símbolo */
 
   --ok:#16A34A;   --ok-50:#F0FDF4;   --ok-200:#BBF7D0;
   --warn:#D97706; --warn-50:#FFFBEB; --warn-200:#FDE68A;
   --err:#DC2626;  --err-50:#FEF2F2;  --err-200:#FECACA;
 
   --radius:14px;
-  --shadow:0 1px 2px rgba(0,0,0,.05), 0 6px 24px rgba(15,39,72,.06);
-  --focus:0 0 0 3px rgba(245,158,11,.25);
+  --shadow:0 2px 10px rgba(15,39,72,.06);
+  --focus:0 0 0 3px rgba(245,158,11,.28);
 }
 
 *{box-sizing:border-box}
-html,body{margin:0;padding:0}
+html,body{margin:0;padding:0;overflow-x:hidden}
 body{
   background:var(--bg); color:var(--text);
-  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, "Helvetica Neue", Arial, sans-serif;
-  line-height:1.45; -webkit-font-smoothing:antialiased;
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Ubuntu, Arial, sans-serif;
+  -webkit-font-smoothing:antialiased; line-height:1.5;
 }
 img{max-width:100%;display:block}
 
 /* ===== Layout ===== */
-.container{max-width:1160px;margin:0 auto;padding:16px}
-.header{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.9);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.container{max-width:1140px;margin:0 auto;padding:16px}
+.header{position:sticky;top:0;z-index:10;background:rgba(255,255,255,.9);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
 .header-inner{display:flex;align-items:center;justify-content:space-between;padding:12px 16px}
-.brand{display:flex;align-items:center;gap:12px}
-.brand-name{font-weight:800;color:var(--text-strong);letter-spacing:.2px}
-.topnav{display:none;gap:18px;font-size:14px}
+.brand{display:flex;align-items:center;gap:10px}
+.brand-name{font-weight:800;color:var(--brand);letter-spacing:.2px}
+.topnav{display:none;gap:16px;font-size:14px}
 .topnav a{color:var(--text);text-decoration:none;opacity:.9}
-.topnav a.active,.topnav a:hover{color:var(--text-strong)}
+.topnav a.active,.topnav a:hover{color:var(--brand);font-weight:600}
 .main{padding:16px 0 84px}
 
 /* bottom nav (mobile) */
-.footer-nav{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(3,1fr);font-size:12px}
+.footer-nav{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);font-size:12px}
 .footer-nav a{padding:10px 8px;text-align:center;text-decoration:none;color:var(--text)}
-.footer-nav a.active{color:var(--text-strong);font-weight:600}
+.footer-nav a.active{color:var(--brand);font-weight:600}
 
 /* ===== Components ===== */
-.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow)}
-.card-title{margin:0 0 10px 0;font-size:16px;color:var(--text-strong);font-weight:700}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow);min-width:0}
+.card-title{margin:0 0 10px 0;font-size:16px;color:var(--brand);font-weight:800}
 .grid{display:grid;gap:12px}
 .grid-2{grid-template-columns:1fr}
 .grid-3{grid-template-columns:1fr}
 .grid-4{grid-template-columns:1fr}
+@media (min-width:640px){ .grid-2{grid-template-columns:1fr 1fr} .grid-3{grid-template-columns:repeat(3,1fr)} }
+@media (min-width:960px){ .grid-4{grid-template-columns:repeat(4,1fr)} .topnav{display:flex} .footer-nav{display:none} .main{padding-bottom:16px} }
 
 /* KPI */
 .kpi .title{font-size:12px;color:var(--muted)}
-.kpi .value{font-size:24px;font-weight:800;color:var(--text-strong)}
+.kpi .value{font-size:22px;font-weight:800;color:var(--text)}
 .kpi .sub{font-size:12px;color:var(--muted)}
 
 /* badges */
@@ -63,14 +64,15 @@ img{max-width:100%;display:block}
 .badge.ok{border-color:var(--ok-200);color:var(--ok);background:var(--ok-50)}
 .badge.warn{border-color:var(--warn-200);color:var(--warn);background:var(--warn-50)}
 .badge.err{border-color:var(--err-200);color:var(--err);background:var(--err-50)}
-.badge.info{border-color:#D6E5F2;color:var(--text-strong);background:#EBF2FA}
+.badge.info{border-color:#D6E5F2;color:#0F2748;background:#EBF2FA}
 
 /* forms */
 input,select,textarea,button{font:inherit;color:inherit}
 .input,.select,.btn{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#fff}
 .input:focus,.select:focus,textarea:focus{outline:none;box-shadow:var(--focus);border-color:#F59E0B}
-.row{display:grid;gap:10px;grid-template-columns:1fr}
-.inline{display:flex;gap:8px;flex-wrap:wrap}
+.field{display:flex;flex-direction:column}
+.field .label{font-size:.9rem;margin-bottom:4px;color:#374151}
+.inline{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .hint{font-size:12px;color:var(--muted)}
 .btn{cursor:pointer}
 .btn-primary{background:linear-gradient(90deg,var(--grad-from),var(--grad-to));color:#fff;border:none}
@@ -80,50 +82,28 @@ input,select,textarea,button{font:inherit;color:inherit}
 .btn-success{background:#fff;border-color:var(--ok-200);color:var(--ok)}
 
 /* table */
-.table-wrap{overflow-x:auto}
-table{width:100%;min-width:720px;border-collapse:collapse;font-size:14px}
+.table-wrap{overflow-x:auto;display:block;-webkit-overflow-scrolling:touch}
+table{width:100%;min-width:560px;border-collapse:collapse;font-size:14px}
 th,td{padding:10px 8px;text-align:left;border-top:1px solid var(--line)}
 thead th{color:var(--muted);font-weight:600;border-top:none}
 
-/* timeline */
+/* timeline (se usares) */
 .timeline{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .ti{display:flex;align-items:center;gap:8px}
 .ti .dot{width:24px;height:24px;border-radius:999px;display:flex;align-items:center;justify-content:center;font-size:12px;border:2px solid var(--line);background:#fff;color:var(--text)}
-.ti.done .dot{background:var(--text-strong);color:#fff;border-color:var(--text-strong)}
-.ti.active .dot{border-color:var(--text-strong)}
-.ti.done .label{color:var(--text-strong);font-weight:600}
+.ti.done .dot{background:var(--brand);color:#fff;border-color:var(--brand)}
+.ti.active .dot{border-color:var(--brand)}
 .ti .label{white-space:nowrap}
 
-/* responsive */
-@media (min-width:640px){ .grid-2{grid-template-columns:1fr 1fr} .grid-3{grid-template-columns:repeat(3,1fr)} }
-@media (min-width:960px){ .grid-4{grid-template-columns:repeat(4,1fr)} .topnav{display:flex} .footer-nav{display:none} .main{padding-bottom:16px} }
 
-
-/* --- FIX OVERFLOW GERAL --- */
-html, body { overflow-x: hidden; }     /* evita barra horizontal da página */
-.card { min-width: 0; }                /* permite encolher dentro do grid */
-
-/* grids com colunas que podem encolher sem estourar */
-.grid-2 { grid-template-columns: minmax(0,1fr) minmax(0,1fr); }
-.grid-3 { grid-template-columns: repeat(3, minmax(0,1fr)); }
-.grid-4 { grid-template-columns: repeat(4, minmax(0,1fr)); }
-
-/* --- TABELAS MAIS RESPONSIVAS --- */
-.table-wrap {
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  display: block;
-}
-table {
-  width: 100%;
-  /* antes estava 720px; isso fazia 2 cards + paddings/passarem de 1200px e estourarem */
-  min-width: 560px;                     /* cabe em 2 colunas no container padrão */
-  border-collapse: collapse;
-  font-size: 14px;
-}
-@media (min-width: 1200px) {
-  table { min-width: 640px; }           /* em telas largas, dá folga */
+/* Ajuste para blocos de simulação e elegibilidade */
+.kpi .value.small {
+  font-size: 16px;      /* em vez de 24px */
+  font-weight: 600;     /* menos pesado */
+  color: var(--text-strong);
 }
 
-/* (opcional) ajuste fino do container para caber certinho 2 cards */
-.container { max-width: 1140px; }       /* era 1160px; pequena folga ajuda com bordas/sombras */
+.kpi .sub.small {
+  font-size: 11px;
+  color: var(--muted);
+}

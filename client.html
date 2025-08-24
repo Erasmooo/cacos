@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="pt">
+<head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>CACOS • Cliente</title>
+<link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+<header class="header">
+  <div class="header-inner">
+    <div class="brand">
+      <img src="logo-cacos.jpg" alt="CACOS" style="height:28px"/>
+      <span class="brand-name">CACOS</span>
+    </div>
+    <nav class="topnav">
+      <a href="index.html">Dashboard</a>
+      <a href="loans.html">Créditos</a>
+      <a href="clients.html">Clientes</a>
+      <a href="validate-internal.html">Validação Interna</a>
+      <a href="validate-bank.html">Validação Banco</a>
+      <a href="process-new.html">Novo Processo</a>
+    </nav>
+  </div>
+</header>
+
+<main class="main">
+  <div class="container grid grid-2" id="root"></div>
+</main>
+
+<nav class="footer-nav">
+  <a href="clients.html">Clientes</a>
+  <a class="active" href="#">Ficha</a>
+  <a href="arrears.html">Mora</a>
+</nav>
+
+<script src="storage.js"></script>
+<script>
+// query param
+const id = new URLSearchParams(location.search).get('id');
+const c = DBApi.getClient(id);
+const loans = DBApi.listLoansByClient(id);
+
+document.title = `CACOS • ${c?.nome||'Cliente'}`;
+
+function cardInfo(){
+  const totalOut = loans.reduce((s,l)=> s + DBApi.loanOutstanding(l), 0);
+  const active = loans.length;
+  return `
+  <div class="card">
+    <h2 class="card-title">Cliente</h2>
+    <div class="grid grid-3">
+      <div class="kpi"><div class="title">Nome</div><div class="value">${c.nome}</div><div class="sub">${c.cidade||''}</div></div>
+      <div class="kpi"><div class="title">Contactos</div><div class="value">${c.telefone||'—'}</div><div class="sub">${c.email||''}</div></div>
+      <div class="kpi"><div class="title">Contratos activos</div><div class="value">${active}</div><div class="sub">Outstanding ${DBApi.fmtMZN(totalOut)}</div></div>
+    </div>
+  </div>`;
+}
+
+function cardLoans(){
+  return `
+  <div class="card">
+    <h2 class="card-title">Contratos</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Loan</th><th>Início</th><th>Prazo</th><th>Prestação</th><th>Outstanding</th><th>DPD</th><th></th></tr></thead>
+        <tbody>
+          ${loans.map(l=>{
+            const out = DBApi.loanOutstanding(l);
+            const dpd = DBApi.loanDPD(l);
+            const badge = dpd>60? 'err': dpd>30? 'warn':'ok';
+            return `<tr>
+              <td>${l.id}</td><td>${l.startDate}</td><td>${l.term} m</td>
+              <td>${DBApi.fmtMZN(l.installment)}</td>
+              <td>${DBApi.fmtMZN(out)}</td>
+              <td><span class="badge ${badge}">${dpd||0}d</span></td>
+              <td class="inline">
+                <a class="btn-outline" href="payment-new.html?loanId=${l.id}&clientId=${c.id}">Registar pagamento</a>
+              </td>
+            </tr>`;
+          }).join('')}
+        </tbody>
+      </table>
+    </div>
+  </div>`;
+}
+
+function cardHistory(){
+  // usa pagamentos como “histórico” visível
+  const allPays = loans.flatMap(l=>DBApi.listPayments(l.id).map(p=>({...p, loanId:l.id})));
+  return `
+  <div class="card">
+    <h2 class="card-title">Histórico de movimentos</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Data</th><th>Loan</th><th>Valor</th><th>Canal</th></tr></thead>
+        <tbody>
+          ${allPays.map(p=>`<tr>
+            <td>${p.date}</td><td>${p.loanId}</td><td>${DBApi.fmtMZN(p.amount)}</td><td>${p.channel||'—'}</td>
+          </tr>`).join('') || `<tr><td colspan="4" class="hint">Sem movimentos.</td></tr>`}
+        </tbody>
+      </table>
+    </div>
+  </div>`;
+}
+
+root.innerHTML = cardInfo() + cardLoans() + cardHistory();
+</script>
+</body>
+</html>

@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>CACOS • Processo</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+<header class="header">
+  <div class="header-inner">
+    <div class="brand">
+      <img src="logo-cacos.jpg" alt="CACOS" style="height:28px"/>
+      <span class="brand-name">CACOS</span>
+    </div>
+    <nav class="topnav">
+      <a href="index.html">Dashboard</a>
+      <a href="loans.html">Créditos</a>
+      <a href="clients.html">Clientes</a>
+      <a href="validate-internal.html">Validação Interna</a>
+      <a href="validate-bank.html">Validação Banco</a>
+      <a href="process-new.html">Novo Processo</a>
+    </nav>
+  </div>
+</header>
+
+<main class="main">
+  <div class="container">
+    <!-- SUMÁRIO + AÇÕES -->
+    <div class="card" id="summaryCard">
+      <div class="inline" style="justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
+        <div>
+          <a class="btn-ghost" href="validate-internal.html">← Voltar</a>
+          <div style="margin-top:6px;font-weight:700" id="procTitle">Processo —</div>
+          <div class="hint" id="clientLine">Cliente —</div>
+        </div>
+        <div class="inline" style="gap:8px">
+          <span class="badge" id="stateBadge">—</span>
+          <button class="btn-success" id="btnApprove">Aprovar</button>
+          <button class="btn-ghost" id="btnDocs">Pedir documentos</button>
+          <button class="btn-danger" id="btnReject">Rejeitar</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-2">
+      <!-- COLUNA ESQ: KYC -->
+      <div class="card">
+        <h2 class="card-title">Identificação</h2>
+        <div id="kycIdent"></div>
+      </div>
+
+      <!-- COLUNA DIR: PROPOSTA -->
+      <div class="card">
+        <h2 class="card-title">Proposta de Crédito</h2>
+        <div id="propResumo"></div>
+        <div class="card" style="margin-top:10px">
+          <div class="card-title" style="margin-bottom:6px">Simulação</div>
+          <div class="grid grid-3" style="gap:12px">
+            <div class="kpi"><div class="title">Prestação (PMT)</div><div class="value" id="prest">—</div><div class="sub" id="breakdown">—</div></div>
+            <div class="kpi"><div class="title">Total a pagar</div><div class="value" id="total">—</div><div class="sub" id="juros">—</div></div>
+            <div class="kpi"><div class="title">CET aprox.</div><div class="value" id="cet">—</div><div class="sub">Taxa efetiva anual</div></div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:10px">
+          <div class="card-title" style="margin-bottom:6px">Elegibilidade (pré-análise)</div>
+          <div class="grid grid-3" style="gap:12px">
+            <div class="kpi"><div class="title">Rendimento mensal</div><div class="value" id="rendMensal">—</div></div>
+            <div class="kpi"><div class="title">Rendimento líquido</div><div class="value" id="rendLiquido">—</div><div class="sub">Despesas: <span id="despMensal">—</span></div></div>
+            <div class="kpi"><div class="title">Prestação máx. (35%)</div><div class="value" id="prestMax">—</div></div>
+          </div>
+          <div class="grid grid-3" style="gap:12px;margin-top:8px">
+            <div class="kpi"><div class="title">Prestação estimada</div><div class="value" id="prestView">—</div></div>
+            <div class="kpi"><div class="title">Rácio Dívida/Rendimento</div><div class="value" id="dti">—</div></div>
+            <div class="kpi"><div class="title">Decisão</div><div class="value"><span class="badge" id="decisao">Sem dados</span></div></div>
+          </div>
+          <div class="hint">Regra: prestação ≤ 35% do rendimento líquido.</div>
+        </div>
+      </div>
+
+      <!-- ENDEREÇO -->
+      <div class="card">
+        <h2 class="card-title">Endereço</h2>
+        <div id="kycEndereco"></div>
+      </div>
+
+      <!-- EMPREGO -->
+      <div class="card">
+        <h2 class="card-title">Emprego & Rendimento</h2>
+        <div id="kycEmprego"></div>
+      </div>
+
+      <!-- PEP -->
+      <div class="card">
+        <h2 class="card-title">PEP</h2>
+        <div id="kycPep"></div>
+      </div>
+
+      <!-- PAGAMENTO -->
+      <div class="card">
+        <h2 class="card-title">Banco & Pagamento</h2>
+        <div id="kycPay"></div>
+      </div>
+
+      <!-- CONSULTOR -->
+      <div class="card">
+        <h2 class="card-title">Consultor</h2>
+        <div id="kycConsultor"></div>
+      </div>
+
+      <!-- REFERÊNCIAS -->
+      <div class="card">
+        <h2 class="card-title">Referências</h2>
+        <div id="kycRefs"></div>
+      </div>
+
+      <!-- ANEXOS -->
+      <div class="card" style="grid-column:1/-1">
+        <h2 class="card-title">Anexos</h2>
+        <div class="grid grid-4" id="attachments" style="gap:12px"></div>
+        <div class="hint" id="attHint"></div>
+      </div>
+
+      <!-- HISTÓRICO -->
+      <div class="card" style="grid-column:1/-1">
+        <h2 class="card-title">Histórico</h2>
+        <div id="hist"></div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<nav class="footer-nav">
+  <a href="process-new.html">Novo</a>
+  <a class="active" href="validate-internal.html">Validação</a>
+  <a href="validate-bank.html">Banco</a>
+  <a href="index.html">Dash</a>
+</nav>
+
+<script src="storage.js"></script>
+<script>
+const AFFORD = 0.35;
+const params = new URLSearchParams(location.search);
+const id = params.get('id');
+
+const el = id => document.getElementById(id);
+const fmt = v => DBApi.fmtMZN(v||0);
+const safe = v => (v && String(v).trim()) ? v : '—';
+const dt = (ts) => ts ? new Date(ts).toLocaleString('pt-PT') : '—';
+
+function badge(elm, state){
+  elm.className = 'badge';
+  if(!state){ elm.textContent = '—'; return; }
+  elm.textContent = state;
+  if(state.includes('REPROV')) elm.classList.add('err');
+  else if(state.includes('PENDENTE')) elm.classList.add('warn');
+  else if(state.includes('VALIDAÇÃO')||state.includes('BANCO')) elm.classList.add('info');
+  else if(state.includes('ATIVO')||state.includes('LIQ')) elm.classList.add('ok');
+}
+
+function line(key, val){ return `<div class="hint"><strong>${key}:</strong> ${safe(val)}</div>`; }
+function two(a,b){ return `<div class="grid grid-2" style="gap:8px">${a}${b}</div>`; }
+
+function renderAttachment(container, label, dataUrl){
+  const isPdf = dataUrl && dataUrl.startsWith('data:application/pdf');
+  const has = !!dataUrl;
+  container.insertAdjacentHTML('beforeend', `
+    <div class="card" style="padding:10px">
+      <div class="hint" style="margin-bottom:6px">${label}</div>
+      ${ has
+          ? (isPdf
+              ? `<a class="btn-outline" href="${dataUrl}" target="_blank">Abrir PDF</a>`
+              : `<a href="${dataUrl}" target="_blank" title="Abrir"><img src="${dataUrl}" alt="${label}" style="max-height:180px;border-radius:10px;border:1px solid var(--line)"/></a>`
+            )
+          : `<div class="hint">Sem ficheiro</div>`}
+    </div>
+  `);
+}
+
+function calcEleg(proposta, emprego){
+  const prest = Number(proposta?.prestacao||0);
+  const r = Number(emprego?.rendimento||0);
+  const d = Number(emprego?.despesas||0);
+  const liquido = Math.max(r - d, 0);
+  const prestMax = liquido * AFFORD;
+  const dti = (prest && liquido) ? (prest/liquido) : 0;
+
+  el('rendMensal').textContent  = r ? fmt(r) : '—';
+  el('despMensal').textContent  = d ? fmt(d) : '—';
+  el('rendLiquido').textContent = liquido ? fmt(liquido) : '—';
+  el('prestMax').textContent    = liquido ? fmt(prestMax) : '—';
+  el('prestView').textContent   = prest ? fmt(prest) : '—';
+  el('dti').textContent         = (prest && liquido) ? (dti*100).toFixed(1)+'%' : '—';
+
+  const badgeEl = el('decisao');
+  badgeEl.className = 'badge';
+  if(!prest || !liquido){ badgeEl.textContent = 'Sem dados'; }
+  else if(prest <= prestMax){ badgeEl.classList.add('ok');  badgeEl.textContent = 'Elegível (pré-análise)'; }
+  else { badgeEl.classList.add('err'); badgeEl.textContent = 'Não elegível'; }
+}
+
+function render(){
+  const proc = DBApi.listProcesses().find(p=>p.id===id);
+  if(!proc){ el('summaryCard').innerHTML = '<div class="hint">Processo não encontrado.</div>'; return; }
+  const cli = DBApi.getClient(proc.clientId);
+
+  // Header
+  el('procTitle').textContent = `Processo ${proc.id}`;
+  el('clientLine').textContent = `${cli?.nome||'—'} • Criado: ${dt(proc.createdAt)}`;
+  badge(el('stateBadge'), proc.state);
+
+  // Proposta + simulação
+  const p = proc.proposta || {};
+  const principal = Number(p.principal||Math.max(Number(p.montante||0) - Number(p.entrada||0),0));
+  const pmt = Number(p.pmtBase || DBApi.pmt(principal, Number(p.taxaAnual||0), Number(p.prazoMeses||0)));
+  const extras = Number(p.extras|| (principal * ((Number(p.seguroPct||0)+Number(p.servicoPct||0))/100)));
+  const prest = Number(p.prestacao || (pmt + extras));
+  const total = prest * Number(p.prazoMeses||0);
+  const juros = total - principal;
+  const iMensal = (Number(p.taxaAnual||0)/100)/12;
+  const cet = iMensal ? Math.pow(1+iMensal,12)-1 : 0;
+
+  el('propResumo').innerHTML = `
+    ${two(line('Montante', fmt(p.montante)), line('Prazo', safe(p.prazoMeses)+' meses'))}
+    ${two(line('Taxa anual', safe(p.taxaAnual)+'%'), line('Entrada', fmt(p.entrada)))}
+    ${two(line('Seguro mensal', (p.seguroPct||0)+'%'), line('Serviço mensal', (p.servicoPct||0)+'%'))}
+    ${two(line('Dia de vencimento', safe(p.diaVenc||'—')), line('Carência', (p.grace||0)+' meses'))}
+  `;
+  el('prest').textContent = prest ? fmt(prest) : '—';
+  el('breakdown').textContent = pmt ? `PMT ${fmt(pmt)}${extras?` + extras ${fmt(extras)}`:''}` : '—';
+  el('total').textContent = total ? fmt(total) : '—';
+  el('juros').textContent = juros ? `Juros aprox.: ${fmt(juros)}` : '—';
+  el('cet').textContent = cet ? (cet*100).toFixed(2)+'% a.a.' : '—';
+
+  // Elegibilidade
+  calcEleg(p, proc.kyc?.emprego);
+
+  // KYC blocos
+  const k = proc.kyc || {};
+  el('kycIdent').innerHTML =
+    two(line('Documento', k.doc ? `${k.doc.tipo||''} ${k.doc.numero||''}` : '—'),
+        line('Validade', k.doc?.validade||'—')) +
+    two(line('Nascimento', k.nascimento||'—'),
+        line('Género', k.genero||'—')) +
+    line('Estado civil', k.estadoCivil||'—');
+
+  el('kycEndereco').innerHTML =
+    line('Morada', k.endereco?.morada) +
+    two(line('Bairro', k.endereco?.bairro), line('Cidade', k.endereco?.cidade)) +
+    line('Província', k.endereco?.provincia);
+
+  el('kycEmprego').innerHTML =
+    two(line('Empregador', k.emprego?.empregador), line('NUIT', k.emprego?.nuit)) +
+    two(line('Orgânica', k.emprego?.organica), line('Função', k.emprego?.funcao)) +
+    line('Endereço', k.emprego?.endereco) +
+    two(line('Supervisor 1', k.emprego?.supervisores?.[0]?.nome)+' '+safe(k.emprego?.supervisores?.[0]?.tel),
+        line('Supervisor 2', k.emprego?.supervisores?.[1]?.nome)+' '+safe(k.emprego?.supervisores?.[1]?.tel)) +
+    two(line('Rendimento', fmt(k.emprego?.rendimento)), line('Despesas', fmt(k.emprego?.despesas)));
+
+  el('kycPep').innerHTML =
+    two(line('É PEP?', (k.pep?.status==='sim'?'Sim':'Não')),
+        line('Entidade', k.pep?.entidade)) +
+    line('Cargo/ligação', k.pep?.cargo);
+
+  el('kycPay').innerHTML =
+    two(line('Banco', k.pagamentos?.banco), line('NIB', k.pagamentos?.nib)) +
+    line('Carteira móvel', k.pagamentos?.carteira);
+
+  el('kycConsultor').innerHTML =
+    two(line('Nome', proc.consultor?.nome), line('Contacto', proc.consultor?.contacto)) +
+    two(line('Banco', proc.consultor?.banco), line('NIB', proc.consultor?.nib)) +
+    line('Carteira móvel', proc.consultor?.wallet);
+
+  const refs = k.referencias || [];
+  el('kycRefs').innerHTML = (refs.length
+    ? refs.map((r,i)=>`<div class="card" style="margin-bottom:8px"><div class="hint"><strong>Ref. ${i+1}</strong></div>${two(line('Nome', r.nome), line('Contacto', r.tel))}${line('Parentesco/Ligação', r.rel)}</div>`).join('')
+    : '<div class="hint">Sem referências.</div>');
+
+  // anexos
+  const attWrap = el('attachments'); attWrap.innerHTML = '';
+  const att = proc.attachments || {};
+  renderAttachment(attWrap, 'BI/Pass (frente)',  att.biFrente);
+  renderAttachment(attWrap, 'BI/Pass (verso)',   att.biVerso);
+  renderAttachment(attWrap, 'Comprovativo de residência', att.residencia);
+  renderAttachment(attWrap, 'Rendimentos (3 meses)', att.rendimentos);
+  el('attHint').textContent = (att.biFrente||att.biVerso||att.residencia||att.rendimentos)
+    ? 'Clique nas imagens/PDF para abrir em nova aba.' : 'Sem anexos para este processo.';
+
+  // histórico simples
+  el('hist').innerHTML =
+    two(line('Criado em', dt(proc.createdAt)), line('Última atualização', dt(proc.updatedAt))) +
+    line('Estado', proc.state) +
+    (k.pendencias ? `<div class="hint"><strong>Pendências:</strong> ${k.pendencias}</div>` : '');
+}
+
+/* --- Ações --- */
+function updateState(newState, extra){
+  const ps = DBApi.listProcesses();
+  const p = ps.find(x=>x.id===id);
+  if(!p) return;
+  p.state = newState;
+  p.updatedAt = Date.now();
+  p.kyc = p.kyc || {};
+  if(extra && extra.pendencias!==undefined) p.kyc.pendencias = extra.pendencias;
+  DBApi.updateProcess(p);
+  alert(`Processo ${p.id} atualizado para: ${newState}.`);
+  render();
+}
+
+el('btnApprove').addEventListener('click', ()=>{
+  if(confirm('Aprovar KYC e enviar para análise do Banco?')){
+    updateState('EM ANÁLISE BANCO');
+  }
+});
+el('btnDocs').addEventListener('click', ()=>{
+  const motivo = prompt('Descreve os documentos/observações a solicitar (opcional):','');
+  updateState('PENDENTE DOCUMENTOS', { pendencias: motivo||'' });
+});
+el('btnReject').addEventListener('click', ()=>{
+  if(confirm('Reprovar este processo por KYC?')){
+    updateState('REPROVADO (KYC)');
+  }
+});
+
+render();
+</script>
+</body>
+</html>

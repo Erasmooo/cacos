@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>CACOS • Detalhe do Crédito</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+<header class="header">
+  <div class="header-inner">
+    <div class="brand">
+      <img src="logo-cacos.jpg" alt="CACOS" style="height:28px"/>
+      <span class="brand-name">CACOS</span>
+    </div>
+    <nav class="topnav">
+      <a href="index.html">Dashboard</a>
+      <a href="loans.html">Créditos</a>
+      <a href="clients.html">Clientes</a>
+      <a href="validate-internal.html">Validação Interna</a>
+      <a href="validate-bank.html">Validação Banco</a>
+      <a href="process-new.html">Novo Processo</a>
+    </nav>
+  </div>
+</header>
+
+<main class="main">
+  <div class="container grid grid-2" id="root" style="display:none">
+    <div class="card">
+      <h2 class="card-title">Crédito <span id="loanId"></span></h2>
+      <div class="grid grid-3" style="gap:12px">
+        <div class="kpi"><div class="title">Cliente</div><div class="value small" id="cliente">—</div><div class="sub small"><a id="clienteLink" href="#">ver ficha</a></div></div>
+        <div class="kpi"><div class="title">Montante</div><div class="value small" id="montante">—</div></div>
+        <div class="kpi"><div class="title">Prestação</div><div class="value small" id="prestacao">—</div></div>
+        <div class="kpi"><div class="title">Prazo</div><div class="value small" id="prazo">—</div></div>
+        <div class="kpi"><div class="title">Estado</div><div class="value small"><span class="badge" id="estado">—</span></div></div>
+        <div class="kpi"><div class="title">DPD</div><div class="value small" id="dpd">—</div></div>
+      </div>
+      <div class="hint" id="observ">—</div>
+    </div>
+
+    <div class="card">
+      <h2 class="card-title">Acções</h2>
+      <div class="inline" style="gap:8px; flex-wrap:wrap">
+        <button class="btn-outline" id="btnPay">Registar pagamento da próxima prestação</button>
+        <button class="btn-ghost" id="btnBack">Voltar</button>
+      </div>
+      <div class="hint" style="margin-top:6px">Pagamentos são simulados e ficam gravados no navegador (localStorage).</div>
+    </div>
+
+    <div class="card" style="grid-column:1/-1">
+      <h2 class="card-title">Cronograma</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th><th>Vencimento</th><th>Prestação</th><th>Juros</th><th>Capital</th><th>Saldo</th><th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="sch"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</main>
+
+<nav class="footer-nav">
+  <a href="process-new.html">Novo</a>
+  <a href="validate-internal.html">Validação</a>
+  <a href="clients.html">Clientes</a>
+  <a class="active" href="loans.html">Créditos</a>
+  <a href="index.html">Dash</a>
+</nav>
+
+<script src="storage.js"></script>
+<script>
+  const fmt = DBApi.fmtMZN;
+  const $ = s => document.querySelector(s);
+
+  const params = new URLSearchParams(location.search);
+  const loanId = params.get('id');
+
+  const procs = DBApi.listProcesses();
+  const proc = procs.find(p=>p.id===loanId);
+
+  if(!proc){
+    document.body.innerHTML += '<div class="container"><div class="card">Crédito não encontrado.</div></div>';
+  } else {
+    $('#root').style.display='';
+    $('#loanId').textContent = proc.id;
+
+    const clients = DBApi.listClients();
+    const cli = clients.find(c=>c.id===proc.clientId);
+    $('#cliente').textContent = cli?.nome || '(desconhecido)';
+    $('#clienteLink').href = `client.html?id=${encodeURIComponent(cli?.id||'')}`;
+
+    const P = proc.proposta || {};
+    const i = (P.taxaAnual||0)/100/12;
+    const n = P.prazoMeses||0;
+    const prest = P.prestacao || DBApi.pmt(P.montante||0, P.taxaAnual||0, n);
+
+    $('#montante').textContent = P.montante? fmt(P.montante):'—';
+    $('#prestacao').textContent = prest? fmt(prest):'—';
+    $('#prazo').textContent = n? (n+' meses') : '—';
+
+    // estado & DPD
+    function nextDueDate(p){
+      const start = new Date(p.startedAt || p.createdAt || Date.now());
+      const paid = (p.payments||[]).length;
+      const d = new Date(start);
+      d.setMonth(d.getMonth()+paid+1);
+      return d;
+    }
+    function daysPastDue(p){
+      const arr = p.payments||[];
+      const tot = p.proposta?.prazoMeses||0;
+      if (arr.length>=tot) return 0;
+      const due = nextDueDate(p);
+      const today = new Date();
+      const diff = Math.floor((today-due)/(1000*60*60*24));
+      return diff>0? diff:0;
+    }
+    const dpd = daysPastDue(proc);
+    $('#dpd').textContent = dpd>0? dpd+' dias':'—';
+
+    const badge = $('#estado');
+    badge.textContent = proc.state||'—';
+    badge.className = 'badge ' + (
+      proc.state==='ATIVO' ? 'ok' :
+      proc.state?.includes('VALIDAÇÃO') ? 'info' :
+      (proc.state==='EM ATRASO'||dpd>0) ? 'warn' : ''
+    );
+
+    // cronograma (simples)
+    const start = new Date(proc.startedAt || proc.createdAt || Date.now());
+    const pays = proc.payments||[];
+    let saldo = P.montante || 0;
+    const rows = [];
+    for(let k=1;k<=n;k++){
+      const due = new Date(start); due.setMonth(due.getMonth()+k);
+      const juros = saldo * i;
+      const cap = Math.max(prest - juros, 0);
+      saldo = Math.max(saldo - cap, 0);
+
+      const pay = pays[k-1];
+      const st = pay
+        ? `<span class="badge ok">Pago em ${new Date(pay.date).toLocaleDateString('pt-PT')}</span>`
+        : (new Date() > due ? `<span class="badge warn">Em atraso</span>` : `<span class="badge">Em aberto</span>`);
+
+      rows.push(`<tr>
+        <td>${k}</td>
+        <td>${due.toLocaleDateString('pt-PT')}</td>
+        <td>${fmt(prest)}</td>
+        <td>${fmt(juros)}</td>
+        <td>${fmt(cap)}</td>
+        <td>${fmt(saldo)}</td>
+        <td>${st}</td>
+      </tr>`);
+    }
+    $('#sch').innerHTML = rows.join('');
+
+    // acções
+    $('#btnBack').addEventListener('click', ()=> history.length>1 ? history.back() : location.href='loans.html');
+
+    $('#btnPay').addEventListener('click', ()=>{
+      const idx = (proc.payments||[]).length; // próximo índice
+      if (idx >= n){ alert('Cronograma completo.'); return; }
+      proc.payments = proc.payments||[];
+      proc.payments.push({ idx: idx+1, amount: prest, date: Date.now(), method:'simulado' });
+
+      // actualizar estado por atraso/ liquidação
+      if (proc.payments.length >= n){
+        proc.state = 'LIQUIDADO';
+      } else {
+        const d = daysPastDue(proc);
+        proc.state = d>0 ? 'EM ATRASO' : 'ATIVO';
+      }
+      proc.updatedAt = Date.now();
+
+      // guardar
+      const all = DBApi.listProcesses().map(p=> p.id===proc.id ? proc : p);
+      localStorage.setItem(DB.processes, JSON.stringify(all));
+
+      // refrescar
+      alert('Pagamento registado.');
+      location.reload();
+    });
+  }
+</script>
+</body>
+</html>
